@@ -8,6 +8,7 @@
 # Archivos del proyecto PlanGo_backend
 PlanGo_backend/config/firebase-credentials.json
 database-api
+PlanGo_backend/db.sqlite3
 
 # Node.js y Frontend dentro de la carpeta PlanGo_frontend
 PlanGo_frontend/node_modules/
