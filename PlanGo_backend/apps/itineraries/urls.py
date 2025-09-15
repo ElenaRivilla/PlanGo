@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import get_itineraries, get_itineraries_by_user, get_destinations, get_destinations_by_itinerary, create_destination, update_destination, create_itinerary, destination_summary, get_itinerary_by_id, get_countries_by_destination, get_countries_by_itinerary, geocodenames_autocomplete, get_csrf_token
+from .views_itinerary import get_itineraries, get_itineraries_by_user,  get_itinerary_by_id, get_countries_by_itinerary, create_itinerary, get_csrf_token
+from .views_destination import get_destinations, get_destinations_by_itinerary, create_destination, update_destination,get_countries_by_destination, destination_summary, geocodenames_autocomplete
 
 urlpatterns = [
     path('csrf-token/', get_csrf_token, name='get_csrf_token'),
+    
     # ITINERARIES
     path('itinerary/', get_itineraries, name='get_itineraries'),
     path('itinerary/user/<int:user_id>/', get_itineraries_by_user, name='get_itineraries_by_user'),
@@ -18,7 +20,6 @@ urlpatterns = [
     path('destination/<int:destination_id>/summary/', destination_summary, name='destination_summary'),
     path('destination/<int:destination_id>/countries/', get_countries_by_destination, name='get_countries_by_destination'),
 
-    # API 
+    # EXTERNAL API 
     path('geocodenames/', geocodenames_autocomplete, name='geocodenames_autocomplete'),
-
 ]
