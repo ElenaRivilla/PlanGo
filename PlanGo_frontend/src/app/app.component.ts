@@ -6,6 +6,7 @@ import { trigger, transition, style, animate, group, query } from '@angular/anim
 import { ItinerariesService } from './core/services/itineraries.service';
 import { DestinationService } from './core/services/destinations.service';
 import { SearchLocationService } from './core/services/search-location.service';
+import { environment } from '../environments/environment';
 
 @Component({
   standalone: true,
@@ -66,6 +67,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setApiKey();
     this.itinerariesService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
         this.itinerariesService.setCsrfToken(csrfToken);
@@ -96,5 +98,12 @@ export class AppComponent implements OnInit {
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
+
+  setApiKey() {
+    let script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apiKey}&libraries=maps,marker`;
+    script.defer = true;
+    document.head.appendChild(script);
   }
 }

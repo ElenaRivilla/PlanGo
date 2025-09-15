@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { map, throwError } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { globals } from '../globals';
 import { BaseHttpService } from './base-http.service';
@@ -47,7 +47,10 @@ export class DestinationService extends BaseHttpService {
 
   getCitiesFromGoogle(input: string, countryCode: string): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/geocodenames/?input=${input}&country=${countryCode}`, { headers });
+    const params = new HttpParams()
+      .set('input', input)
+      .set('country', countryCode);
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/geocodenames/`, { headers, params });
   }
 
   getCountriesByItinerary(itineraryId: number): Observable<any> {

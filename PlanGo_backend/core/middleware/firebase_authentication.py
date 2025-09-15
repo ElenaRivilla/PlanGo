@@ -12,11 +12,21 @@ class FirebaseAuthenticationMiddleware(MiddlewareMixin):
             return None
 
         # Excluir rutas públicas
-        public_paths = ['/users/login-with-google/', '/users/register/']
-        if request.path.startswith('/admin/'):
-            return None
-        if request.path in public_paths:
-            return None
+        public_paths = [
+            '/users/login-with-google',
+            '/users/register',
+            '/admin',
+            '/itineraries/geocodenames'
+        ]
+
+        # Normaliza la ruta (quita slash final para comparar)
+        path = request.path.rstrip('/')
+        # Revisar y registrar si es ruta pública
+        for p in public_paths:
+            p_norm = p.rstrip('/')
+            if path == p_norm or path.startswith(p_norm + '/'):
+                print("Public path accessed:", request.path)
+                return None
 
         # Obtener el token del encabezado Authorization
         auth_header = request.headers.get('Authorization')

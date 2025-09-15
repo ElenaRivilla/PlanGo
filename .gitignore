@@ -36,6 +36,7 @@ PlanGo_frontend/.classpath
 PlanGo_frontend/*.launch
 PlanGo_frontend.settings/
 PlanGo_frontend/.sublime-workspace
+PlanGo_frontend/src/environments
 
 # Visual Studio Code
 PlanGo_frontend/.vscode/*

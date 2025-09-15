@@ -10,7 +10,7 @@ from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
@@ -29,7 +29,14 @@ from datetime import timedelta
 
 # Create your views here.
 GEONAMES_API_KEY = settings.GEONAMES_API_KEY  
+
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'csrftoken': token})  
+
 # ITINERARIOS
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_itineraries(request):
     itineraries = Itinerary.objects.all()
     if not itineraries.exists():
@@ -48,10 +55,8 @@ def get_itineraries(request):
     ]
     return JsonResponse({'itineraries': data})
 
-def get_csrf_token(request):
-    token = get_token(request)
-    return JsonResponse({'csrftoken': token})   
-    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])   
 def get_itineraries_by_user(request, user_id):
     itineraries = Itinerary.objects.filter(creator_user=user_id)
     if not itineraries.exists():
@@ -85,6 +90,7 @@ def get_itinerary_by_id(request, itinerary_id):
 # PlanGo_backend/apps/itineraries/views.py
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_countries_by_itinerary(request, itinerary_id):
     try:
         itinerary = Itinerary.objects.get(pk=itinerary_id)
@@ -93,33 +99,7 @@ def get_countries_by_itinerary(request, itinerary_id):
         return Response({'countries': countries_list})
     except Itinerary.DoesNotExist:
         return Response({'error': 'Itinerario no encontrado'}, status=404)
-
-# Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
-@require_POST
-def create_itinerary2(request):
-    data = json.loads(request.body)
-    itinerary_name = data.get('itinerary_name')
-    creator_user_id = data.get('creator_user_id')
-    creation_date = data.get('creation_date')
-    start_date = data.get('start_date')
-    end_date = data.get('end_date')
-    
-    try:
-        creator_user = User.objects.get(id=creator_user_id)
-        itinerary = Itinerary.objects.create(
-            itinerary_name=itinerary_name,
-            creator_user=creator_user,
-            creation_date=creation_date,
-            start_date=start_date,
-            end_date=end_date
-        )
-        return JsonResponse({'success': True, 'itinerary_id': itinerary.itinerary_id})
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
         
-# OTRA OPCIÓN (MAS SEGURA CON SERIALIZER)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
 def create_itinerary(request):
@@ -132,6 +112,8 @@ def create_itinerary(request):
 
 
 # DESTINOS
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_destinations(request):
     destination = Destination.objects.all()
     if not destination.exists():
@@ -151,7 +133,8 @@ def get_destinations(request):
     ]
     return JsonResponse({'destination': data})
     
-    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  
 def get_destinations_by_itinerary(request, itinerary_id):
     destination = Destination.objects.filter(itinerary=itinerary_id)
     if not destination.exists():
@@ -172,53 +155,41 @@ def get_destinations_by_itinerary(request, itinerary_id):
     ]
     return JsonResponse({'User destinations': data})
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def create_destination(request):
-#     serializer = DestinationSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_destination(request):
-    if request.method == 'POST':
-        data = request.data
-        itinerary_id = data.get('itinerary')
-        country = data.get('country')
-        city_name = data.get('city_name')
-        start_date = data.get('start_date')
-        end_date = data.get('end_date')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
+    data = request.data
+    itinerary_id = data.get('itinerary')
+    country = data.get('country')
+    city_name = data.get('city_name')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    
+    try:
+        itinerary = Itinerary.objects.get(pk=itinerary_id)
+    except Itinerary.DoesNotExist:
+        return JsonResponse({'error': f'Itinerario con id {itinerary_id} no existe.'}, status=404)        
+    destinos = Destination.objects.filter(itinerary=itinerary).order_by('-end_date')
+    if destinos.exists():
+        last_end_date = destinos.last().end_date
+        start_date = last_end_date + timedelta(days=1)
+    else:
+        start_date = itinerary.start_date
+    end_date = start_date   
+    destination = Destination.objects.create(   
+        itinerary=itinerary,
+        country=country,
+        city_name=city_name,
+        start_date=start_date,
+        end_date=end_date,
+        latitude=latitude,
+        longitude=longitude,
+    )
 
-        try:
-            itinerary = Itinerary.objects.get(pk=itinerary_id)
-        except Itinerary.DoesNotExist:
-            return JsonResponse({'error': f'Itinerario con id {itinerary_id} no existe.'}, status=404)        
-        destinos = Destination.objects.filter(itinerary=itinerary).order_by('-end_date')
-
-        if destinos.exists():
-            last_end_date = destinos.last().end_date
-            start_date = last_end_date + timedelta(days=1)
-        else:
-            start_date = itinerary.start_date
-
-        end_date = start_date 
-
-        destination = Destination.objects.create(
-            itinerary=itinerary,
-            country =country,
-            city_name=city_name,
-            start_date=start_date,
-            end_date=end_date,
-            latitude = latitude,
-            longitude = longitude,
-        )
-
-        return JsonResponse({'status': 'ok', 'destination_id': destination.pk})
+    return JsonResponse({'status': 'ok', 'destination_id': destination.pk})
     
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -235,6 +206,8 @@ def update_destination(request, destination_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def destination_summary(request, destination_id):
     accommodations_count = Accommodation.objects.filter(destination_id=destination_id).count()
     activities_count = Activity.objects.filter(destination_id=destination_id).count()
@@ -251,6 +224,7 @@ def destination_summary(request, destination_id):
     
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_countries_by_destination(request, destination_id):
     try:
         destination = Destination.objects.get(pk=destination_id)
@@ -260,6 +234,7 @@ def get_countries_by_destination(request, destination_id):
         return Response({'countries': countries_list, 'itinerary_id': itinerary.itinerary_id})
     except Destination.DoesNotExist:
         return Response({'error': 'Destino no encontrado'}, status=404)
+
 
 def country_name_to_code(name):
     try:
@@ -273,7 +248,8 @@ def country_names_to_codes(names):
 
 # google_places_autocomplete
 @csrf_exempt
-@require_GET
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def geocodenames_autocomplete(request):
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')

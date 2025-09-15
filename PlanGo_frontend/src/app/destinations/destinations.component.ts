@@ -48,7 +48,7 @@ export class DestinationsComponent implements OnInit {
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
   countries: any[] = [];
-  allCountries: { code: string, name: string }[] = [];
+  allCountries: { code: string, nameEs: string, nameEn: string }[] = [];
   searchText: string = '';
   cities: any[] = [];
   itineraryStartDate!: string;
@@ -185,17 +185,47 @@ export class DestinationsComponent implements OnInit {
       this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
-          name: country.translations?.spa?.common || country.name.common,
+          nameEs: country.translations?.spa?.common || country.name.common,
+          nameEn: country.name.common,
         }))
-        .sort((a: any, b: any) => a.name.localeCompare(b.name));
+        .sort((a: any, b: any) => a.nameEs.localeCompare(b.nameEs));
     } catch (error) {
       console.error('Error al obtener los países:', error);
     }
   }
 
   getCountryCodesByNames(names: string[]): string[] {
+    if (!this.allCountries || this.allCountries.length === 0) {
+      console.warn('allCountries está vacío o no inicializado.');
+      return [];
+    }
+
+    if (!names || names.length === 0) {
+      console.warn('El arreglo de nombres está vacío o no definido:', names);
+      return [];
+    }
+
+    // Normaliza los nombres a buscar
+    let normalizedNames = names.map(n => n.trim().toLowerCase());
+
+    // Filtra los países comparando con nombres en español e inglés (exact match primero)
+    let exactMatches = this.allCountries
+      .filter(c => {
+        let nameEs = (c.nameEs || '').trim().toLowerCase();
+        let nameEn = (c.nameEn || '').trim().toLowerCase();
+        return normalizedNames.some(n => n === nameEs || n === nameEn);
+      })
+      .map(c => c.code);
+
+    if (exactMatches.length > 0) return exactMatches;
+
+    // Si no hay coincidencias exactas, intentar contains (por si vienen abreviaciones o formatos distintos)
     return this.allCountries
-      .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
+      .filter(c => {
+        let nameEs = (c.nameEs || '').trim().toLowerCase();
+        let nameEn = (c.nameEn || '').trim().toLowerCase();
+        return normalizedNames.some(n => nameEs.includes(n) || nameEn.includes(n));
+      })
       .map(c => c.code)
   }
 
@@ -220,7 +250,9 @@ export class DestinationsComponent implements OnInit {
         next: (results: any[]) => {
           this.cities = results;
         },
-        error: () => this.cities = [],
+        error: (err) => {
+          this.cities = [];
+        },
       });
     } else {
       this.cities = [];
@@ -254,7 +286,7 @@ export class DestinationsComponent implements OnInit {
       return;
     }
 
-    const exists = this.destinations.some(
+    let exists = this.destinations.some(
       dest => dest.city_name.trim().toLowerCase() === city.name.trim().toLowerCase()
     );
     if (exists) {
@@ -293,17 +325,17 @@ export class DestinationsComponent implements OnInit {
   }
 
   calculateDays(start: string | Date, end: string | Date): number {
-    const startDate = typeof start === 'string' ? new Date(start) : start;
-    const endDate = typeof end === 'string' ? new Date(end) : end;
+    let startDate = typeof start === 'string' ? new Date(start) : start;
+    let endDate = typeof end === 'string' ? new Date(end) : end;
     return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
   }
 
   getOccupiedDays(): number {
     let total = 0;
-    for (const dest of this.destinations) {
+    for (let dest of this.destinations) {
       if (dest.start_date && dest.end_date) {
-        const start = new Date(dest.start_date);
-        const end = new Date(dest.end_date);
+        let start = new Date(dest.start_date);
+        let end = new Date(dest.end_date);
         // Sumamos +1 para incluir ambos días
         total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
       }
@@ -316,8 +348,8 @@ export class DestinationsComponent implements OnInit {
       .filter(dest => dest.destination_id !== currentDestinationId)
       .reduce((total, dest) => {
         if (dest.start_date && dest.end_date) {
-          const start = new Date(dest.start_date);
-          const end = new Date(dest.end_date);
+          let start = new Date(dest.start_date);
+          let end = new Date(dest.end_date);
           total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
         }
         return total;
