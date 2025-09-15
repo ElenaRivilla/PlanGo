@@ -1,6 +1,7 @@
 from dataclasses import dataclass, asdict
 from typing import Iterable, List, Dict, Optional
 from datetime import date, datetime
+from ..models.destination import Destination
 
 @dataclass
 class ItineraryDTO:
@@ -25,11 +26,7 @@ def map_itinerary(it) -> Dict:
     creator = getattr(it.creator_user, 'id', it.creator_user) if hasattr(it, 'creator_user') else None
     countries_str = getattr(it, 'countries', '') or ''
     countries = [c.strip() for c in countries_str.split(',') if c.strip()]
-    destinations_count = getattr(it, 'destinations', None)
-    try:
-        dest_count = destinations_count.count() if destinations_count is not None else None
-    except Exception:
-        dest_count = None
+    destinations_count = Destination.objects.filter(itinerary=it).count()  # Contar destinos directamente
 
     dto = ItineraryDTO(
         itinerary_id=getattr(it, 'itinerary_id', getattr(it, 'id', None)),
@@ -39,7 +36,7 @@ def map_itinerary(it) -> Dict:
         start_date=_iso(getattr(it, 'start_date', None)),
         end_date=_iso(getattr(it, 'end_date', None)),
         countries=countries,
-        destinations_count=dest_count
+        destinations_count=destinations_count
     )
     return asdict(dto)
 

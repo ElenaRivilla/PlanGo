@@ -12,8 +12,8 @@
         <div class="h-20 flex flex-row justify-between items-center">
           <div class="flex flex-col">
             <h1 class="text-2xl font-bold">{{ selectedItinerary?.itinerary_name }}</h1>
-            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd-MMMM-yyyy' }} - {{
-              selectedItinerary?.end_date | date:'dd-MMMM-yyyy' }}</time>
+            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd/MM/yyyy':'es-ES' }} - {{
+              selectedItinerary?.end_date | date:'dd/MM/yyyy':'es-ES' }}</time>
           </div>
           <div class="flex flex-row items-center">
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
@@ -118,7 +118,7 @@
             [itineraryTotalDays]="itineraryTotalDays"
             [days]="calculateDays(destination.start_date, destination.end_date)"
             [otherOccupiedDays]="getOtherOccupiedDays(destination.destination_id)"
-            (maxDaysReached)="onMaxDaysReached(destination.destination_id)" (fechasConfirmadas)="guardarFechas($event)"
+            (maxDaysReached)="onMaxDaysReached(destination.destination_id)" (confirmedDates)="saveDates($event)"
             (reloadDestination)="reloadDestination($event)">
           </app-day-counter>
           <button (click)="goPlaces(destination.destination_id)">

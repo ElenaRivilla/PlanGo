@@ -7,7 +7,6 @@ import { globals } from '../globals';
 import { BaseHttpService } from './base-http.service';
 import { MessageService } from '../messageService';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -36,7 +35,7 @@ export class DestinationService extends BaseHttpService {
   }
 
   getDestinationSummary(destinationId: number): Observable<any> {
-    const headers = this.createHeaders(); // Si necesitas autenticación
+    const headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}/summary/`, { headers });
   }
 
@@ -58,9 +57,9 @@ export class DestinationService extends BaseHttpService {
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${itineraryId}/countries/`, { headers })
   }
 
-  createDestination(destination: any): Observable<any> {
+  createDestination(payload: any): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/destination/create/`, destination, { headers, withCredentials: true });
+    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/destination/create/`, payload, { headers, withCredentials: true });
   }
 
   updateDateDestination(destinationId: any, data: any = {}): Observable<any> {

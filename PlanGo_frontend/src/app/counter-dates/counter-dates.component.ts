@@ -22,7 +22,7 @@ export class CounterDatesComponent {
   @Input() bgColor: string = '#4c43ce'; 
   @Input() textColor: string = '#ffffff'; 
   @Output() maxDaysReached = new EventEmitter<void>();
-  @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
+  @Output() confirmedDates = new EventEmitter<{ destinationId: number; startDate: string; endDate: string }>();
   @Output() reloadDestination = new EventEmitter<number>();
   
   count: number = 1;
@@ -57,13 +57,13 @@ export class CounterDatesComponent {
     return date.toISOString().split('T')[0]; // YYYY-MM-DD
   }
 
-  confirmarFechas(): void {
-    const datos = {
-      idDestino: this.idDestino,
-      fechaInicio: this.formatDate(this.startDate),
-      fechaFin: this.formatDate(this.endDate),
+  confirmDates(): void {
+    const data = {
+      destinationId: this.idDestino,
+      startDate: this.formatDate(this.startDate),
+      endDate: this.formatDate(this.endDate),
     };
-    this.fechasConfirmadas.emit(datos);
+    this.confirmedDates.emit(data);
   }
 
   increment(): void {
@@ -76,7 +76,7 @@ export class CounterDatesComponent {
       this.destinationService.updateDateDestination(this.idDestino, { end_date: newEndDate })
         .pipe(take(1))
         .subscribe({
-          next: () => this.confirmarFechas(),
+          next: () => this.confirmDates(),
           error: (err) => console.error('Error actualizando end_date:', err)
         });
     } else {
@@ -92,7 +92,7 @@ export class CounterDatesComponent {
         .pipe(take(1))
         .subscribe({
           next: () => {
-            this.confirmarFechas();
+            this.confirmDates();
           },
           error: (err) => console.error('Error actualizando end_date:', err)
         });

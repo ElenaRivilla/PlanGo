@@ -66,7 +66,7 @@ export class DestinationsComponent implements OnInit {
     private toast: BaseToastService,
   ) { }
 
-  async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+  async ngOnInit() {
     await this.getCountries();
     this.itineraryStartDate = history.state.itineraryStartDate;
     this.itineraryEndDate = history.state.itineraryEndDate;
@@ -75,13 +75,13 @@ export class DestinationsComponent implements OnInit {
     this.route.paramMap.pipe(
       map((params): number => Number(params.get('itineraryId'))),
       filter((itineraryId: number) => !!itineraryId),
-      distinctUntilChanged()
-    ).subscribe((itineraryId: number) => {
-      this.fetchItineraryDetails(itineraryId);
-      this.fetchDestinationsByItinerary(itineraryId);
-      this.fetchCountriesByItinerary(itineraryId);
-      this.selectedItineraryId = itineraryId;
-    });
+      distinctUntilChanged())
+      .subscribe((itineraryId: number) => {
+        this.fetchItineraryDetails(itineraryId);
+        this.fetchDestinationsByItinerary(itineraryId);
+        this.fetchCountriesByItinerary(itineraryId);
+        this.selectedItineraryId = itineraryId;
+      });
   }
 
   fetchItineraryDetails(itineraryId: number): void {
@@ -105,11 +105,10 @@ export class DestinationsComponent implements OnInit {
     return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
   }
 
-
-  guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
-    this.destinationService.updateDateDestination(event.idDestino, {
-      start_date: event.fechaInicio,
-      end_date: event.fechaFin
+  saveDates(event: { destinationId: number; startDate: string; endDate: string }): void {
+    this.destinationService.updateDateDestination(event.destinationId, {
+      start_date: event.startDate,
+      end_date: event.endDate
     }).subscribe({
       next: () => {
         // Vuelve a cargar los destinos para actualizar los días ocupados
@@ -150,8 +149,8 @@ export class DestinationsComponent implements OnInit {
 
   getTotalExpenses(): number {
     return this.destinations.reduce((sum, dest) => {
-      let resumen = this.summary[dest.destination_id];
-      return sum + (resumen ? resumen.total_expenses || 0 : 0);
+      let summary = this.summary[dest.destination_id];
+      return sum + (summary ? summary.total_expenses || 0 : 0);
     }, 0);
   }
 
@@ -162,7 +161,7 @@ export class DestinationsComponent implements OnInit {
       },
       error: (err: any) => {
         this.summary[destinationId] = null;
-        console.error('No se pudo cargar el resumen del destino', err);
+        console.error('Could not load destination summary', err);
       }
     });
   }
@@ -190,21 +189,11 @@ export class DestinationsComponent implements OnInit {
         }))
         .sort((a: any, b: any) => a.nameEs.localeCompare(b.nameEs));
     } catch (error) {
-      console.error('Error al obtener los países:', error);
+      console.error('Error fetching countries:', error);
     }
   }
 
   getCountryCodesByNames(names: string[]): string[] {
-    if (!this.allCountries || this.allCountries.length === 0) {
-      console.warn('allCountries está vacío o no inicializado.');
-      return [];
-    }
-
-    if (!names || names.length === 0) {
-      console.warn('El arreglo de nombres está vacío o no definido:', names);
-      return [];
-    }
-
     // Normaliza los nombres a buscar
     let normalizedNames = names.map(n => n.trim().toLowerCase());
 
@@ -260,7 +249,9 @@ export class DestinationsComponent implements OnInit {
   }
 
   formatCountries(): string {
-    if (!this.selectedItinerary?.countries) return '';
+    if (!this.selectedItinerary || typeof this.selectedItinerary.countries !== 'string') {
+      return '';
+    }
 
     let countriesArray = this.selectedItinerary.countries.split(',');
     let length = countriesArray.length;
@@ -282,7 +273,7 @@ export class DestinationsComponent implements OnInit {
 
   onCitySelect(city: any): void {
     if (!this.selectedItineraryId || !this.countries.length) {
-      this.errorMessage = 'Faltan datos para crear el destino';
+      this.errorMessage = 'Missing data to create the destination';
       return;
     }
 
@@ -314,7 +305,7 @@ export class DestinationsComponent implements OnInit {
         this.errorMessage = '';
       },
       error: (err) => {
-        this.errorMessage = 'Error al crear el destino';
+        this.errorMessage = 'Error creating destination';
         console.error(err);
       }
     });

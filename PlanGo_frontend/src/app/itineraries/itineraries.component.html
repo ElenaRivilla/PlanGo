@@ -34,7 +34,7 @@
             >
               <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
               <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
-                {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
+                {{ itinerary.start_date | date:'dd/MM/yyyy':'es-ES' }} - {{ itinerary.end_date | date:'dd/MM/yyyy':'es-ES' }}
               </time>
               <div class="flex flex-row items-center w-[30%] justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-8 mr-3">

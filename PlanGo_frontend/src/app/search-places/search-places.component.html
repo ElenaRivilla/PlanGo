@@ -15,11 +15,11 @@
                             <h1 class="text-2xl font-bold">{{ currentDestination.city_name }}, {{
                                 currentDestination.country }}</h1>
                             <time class="text-xl" [attr.datetime]="currentDestination.start_date">
-                                {{ currentDestination.start_date | date:'dd-MMMM-yyyy' }}
+                                {{ currentDestination.start_date | date:'dd/MM/yyyy':'es-ES' }}
                             </time>
                             -
                             <time class="text-xl" [attr.datetime]="currentDestination.end_date">
-                                {{ currentDestination.end_date | date:'dd-MMMM-yyyy' }}
+                                {{ currentDestination.end_date | date:'dd/MM/yyyy':'es-ES' }}
                             </time>
                         </div>
                     </div>

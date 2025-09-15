@@ -14,10 +14,10 @@
                         <div *ngFor="let destination of destinations" class="destination-item">
                             <h1 class="text-2xl font-bold">{{ destination.city_name }}</h1>
                             <time class="text-xl" [attr.datetime]="destination.start_date">{{ destination.start_date |
-                                date:'dd-MMMM-yyyy' }}</time>
+                                date:'dd/MM/yyyy':'es-ES' }}</time>
                             -
                             <time class="text-xl" [attr.datetime]="destination.end_date">{{ destination.end_date |
-                                date:'dd-MMMM-yyyy' }}</time>
+                                date:'dd/MM/yyyy':'es-ES' }}</time>
                         </div>
                     </div>
                     <app-participants-form [destination]="selectedDestinationId ?? 0"></app-participants-form>

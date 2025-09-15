@@ -7,6 +7,9 @@ import { ItinerariesService } from './core/services/itineraries.service';
 import { DestinationService } from './core/services/destinations.service';
 import { SearchLocationService } from './core/services/search-location.service';
 import { environment } from '../environments/environment';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 @Component({
   standalone: true,
@@ -14,6 +17,7 @@ import { environment } from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   imports: [RouterModule],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }],
   animations: [
     trigger('routeAnimations', [
       // Animación de login a register (invertida)
@@ -67,6 +71,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    registerLocaleData(localeEs);
     this.setApiKey();
     this.itinerariesService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
