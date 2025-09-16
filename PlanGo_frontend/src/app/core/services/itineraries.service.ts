@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, switchMap, throwError } from 'rxjs';
+import { map, Observable, switchMap, throwError, of } from 'rxjs';
 import { globals } from '../globals';
 import { BaseHttpService } from './base-http.service';
 import { MessageService } from '../messageService';
@@ -77,8 +77,8 @@ export class ItinerariesService extends BaseHttpService {
   }
   
   getCsrfTokenFromServer(): Observable<string> {
-    if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage is not available in this environment'));
-  
+    if (!isPlatformBrowser(this.platformId)) return of('');
+
     const token = localStorage.getItem(globals.keys.accessToken) || '';
     if (!token) {
       return throwError(() => new Error('Token de usuario no disponible'));

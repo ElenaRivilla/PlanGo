@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, switchMap, throwError } from 'rxjs';
+import { map, Observable, switchMap, throwError, of } from 'rxjs';
 import { globals } from '../globals';
 import { MessageService } from '../messageService';
 
@@ -27,10 +27,15 @@ export class SearchLocationService {
         let token = '';
         let csrfToken = '';
         if (isPlatformBrowser(this.platformId)) {
-            token = localStorage.getItem(globals.keys.accessToken) || '';
-            // Lee la cookie csrftoken directamente
-            const match = document.cookie.match(/csrftoken=([^;]+)/);
-            csrfToken = match ? match[1] : '';
+            try {
+                token = localStorage.getItem(globals.keys.accessToken) || '';
+                // Lee la cookie csrftoken directamente
+                const match = typeof document !== 'undefined' ? document.cookie.match(/csrftoken=([^;]+)/) : null;
+                csrfToken = match ? match[1] : '';
+            } catch (e) {
+                token = '';
+                csrfToken = '';
+            }
         }
 
         return new HttpHeaders({
@@ -41,7 +46,7 @@ export class SearchLocationService {
     }
 
     getCsrfTokenFromServer(): Observable<string> {
-        if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage is not available in this environment'));
+        if (!isPlatformBrowser(this.platformId)) return of('');
 
         const token = localStorage.getItem(globals.keys.accessToken) || '';
         if (!token) {

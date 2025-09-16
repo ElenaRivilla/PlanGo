@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { map, throwError } from 'rxjs';
+import { map, throwError, of } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -91,7 +91,7 @@ export class DestinationService extends BaseHttpService {
   }
 
   getCsrfTokenFromServer(): Observable<string> {
-    if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage is not available in this environment'));
+    if (!isPlatformBrowser(this.platformId)) return of('');
 
     const token = localStorage.getItem(globals.keys.accessToken) || '';
     if (!token) {

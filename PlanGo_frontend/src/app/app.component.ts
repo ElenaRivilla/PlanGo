@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { map, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
@@ -63,11 +63,12 @@ import localeEs from '@angular/common/locales/es';
   ]
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private itinerariesService: ItinerariesService,
     private destinationService: DestinationService,
     private searchLocationService: SearchLocationService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -105,10 +106,23 @@ export class AppComponent implements OnInit {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 
+  ngAfterViewInit(): void {
+    if (typeof document !== 'undefined') this.setApiKey();
+    try {
+      this.cdr.detectChanges();
+    } catch (e) {
+    }
+  }
+
   setApiKey() {
-    let script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apiKey}&libraries=maps,marker`;
-    script.defer = true;
-    document.head.appendChild(script);
+    if (typeof document === 'undefined') return;
+    try {
+      let script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apiKey}&libraries=maps,marker`;
+      script.defer = true;
+      document.head.appendChild(script);
+    } catch (err) {
+      console.error('Could not append Google Maps script:', err);
+    }
   }
 }
