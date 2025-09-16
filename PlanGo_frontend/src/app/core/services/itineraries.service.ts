@@ -25,6 +25,7 @@ export class ItinerariesService extends BaseHttpService {
   getItineraries(): Observable<any> {
     return this.getIdUser().pipe(
       switchMap((userId) => {
+        if (userId === null) return of({ itineraries: [] });
         const headers = this.createHeaders();
         return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/user/${userId}/`, { headers });
       })
@@ -44,19 +45,19 @@ export class ItinerariesService extends BaseHttpService {
     });
   }
   
-  getIdUser(): Observable<number> {
-    if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage no está disponible en este entorno'));
-  
+  getIdUser(): Observable<number | null> {
+    if (!isPlatformBrowser(this.platformId)) return of(null);
+
     const token = localStorage.getItem(globals.keys.accessToken) || '';
-    if (!token)  throwError(() => new Error('No token found in localStorage'));
-  
+    if (!token) return throwError(() => new Error('No token found in localStorage'));
+
     const payloadBase64 = token.split('.')[1];
     if (!payloadBase64) return throwError(() => new Error('Invalid token format'));
-  
+
     const decodedPayload = JSON.parse(atob(payloadBase64));
     const uid = decodedPayload?.uid || decodedPayload?.sub;
     if (!uid) return throwError(() => new Error('UID not found in token'));
-  
+
     const headers = this.createHeaders();
     return this.httpClient.post<{ id: number }>(`${globals.apiBaseUrl}/users/user/get_id/`, { uid }, { headers }).pipe(
       map((response) => response.id)

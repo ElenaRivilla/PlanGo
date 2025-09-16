@@ -9,6 +9,7 @@ import { AuthService } from '../auth/auth.service';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
 
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -62,13 +63,24 @@ export class HeaderComponent {
       }
     });
 
-    this.itinerariesService.getIdUser().subscribe((idUser: number) => {
-        this.userService.getUserById(idUser)
-          .subscribe(userData => {
-            this.userName = `${userData.first_name} ${userData.last_name}`;
-            this.userEmail = userData.email;
-            this.userPhoto = userData.user_image;
-          });
+    this.itinerariesService.getIdUser().subscribe({
+        next: (idUser: number | null) => {
+          if (idUser === null) {
+            this.userName = '';
+            this.userEmail = '';
+            this.userPhoto = '';
+            return;
+          }
+          this.userService.getUserById(idUser)
+            .subscribe(userData => {
+              this.userName = `${userData.first_name} ${userData.last_name}`;
+              this.userEmail = userData.email;
+              this.userPhoto = userData.user_image;
+            });
+        },
+        error: () => {
+          this.toast.showErrorToast('Error al obtener la información del usuario', false);
+        }
       });
   }
 

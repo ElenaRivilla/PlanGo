@@ -162,7 +162,11 @@ export class SearchPlacesComponent {
 
   loadPlaces(lat: number, lng: number): void {
     this.itinerariesService.getIdUser().subscribe({
-      next: (userId: number) => {
+      next: (userId: number | null) => {
+        if (userId === null) {
+          this.toast.showErrorToast('Error al obtener la información del usuario', false);
+          return;
+        }
         let payload = {
           latitude: lat,
           longitude: lng,
@@ -239,7 +243,11 @@ export class SearchPlacesComponent {
     }
 
     this.itinerariesService.getIdUser().subscribe({
-      next: (userId: number) => {
+      next: (userId: number | null) => {
+        if (userId === null) {
+          this.toast.showErrorToast('Error al obtener la información del usuario', false);
+          return;
+        }
         let payload = {
           user_id: userId,
           place_id: place.id,
@@ -294,7 +302,11 @@ export class SearchPlacesComponent {
     }
 
     this.itinerariesService.getIdUser().subscribe({
-      next: (userId: number) => {
+      next: (userId: number | null) => {
+        if (userId === null) {
+          this.toast.showErrorToast('Error al obtener la información del usuario', false);
+          return;
+        }
         let payload = {
           user_id: userId,
           place_id: place.id,

@@ -109,7 +109,12 @@ export class SavedPlacesComponent {
     });
 
     this.itinerariesService.getIdUser().subscribe({
-      next: (userId: number) => {
+      next: (userId: number | null) => {
+        if (userId === null) {
+          this.toast.showErrorToast('Error al obtener la información del usuario', false);
+          this.userId = 0;
+          return;
+        }
         this.userId = userId;
         this.loadSavedPlaces();
       },

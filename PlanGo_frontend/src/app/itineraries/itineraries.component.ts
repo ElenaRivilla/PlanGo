@@ -8,7 +8,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { switchMap } from 'rxjs';
+import { switchMap, throwError } from 'rxjs';
 import { globals } from '../core/globals';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
@@ -102,6 +102,11 @@ export class ItinerariesComponent implements OnInit {
 
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
+              if (userId === null) {
+                this.toast.showErrorToast('Error al obtener la información del usuario', false);
+                return throwError(() => new Error('User id not available'));
+              }
+
               let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
               let newItinerary: Itinerary = {
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
