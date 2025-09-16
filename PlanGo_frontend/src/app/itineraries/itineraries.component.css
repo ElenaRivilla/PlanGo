@@ -21,28 +21,32 @@
   @apply sticky top-0 z-10 flex items-center justify-between pb-3 bg-white;
   height: 5rem;
 }
+
 .header-left {
   width: 30%;
 }
+
 .title {
   @apply text-4xl font-bold text-gray-800;
 }
+
 .title-hr {
   @apply border-black mt-4;
   border-width: 1px;
 }
 
 .btn-add-itinerary {
-  @apply h-12 text-white px-4 py-2 rounded-full transition duration-300;
-  background-color: var(--primary-color);
+  @apply h-12 text-white px-4 py-2 rounded-full transition duration-300 bg-primary;
 }
+
 .btn-add-itinerary:hover {
-  background-color: var(--secondary-color);
+  @apply bg-secondary;
 }
 
 .empty-state {
   @apply flex-grow;
 }
+
 .empty-text {
   @apply text-xl pl-3 my-4;
 }
@@ -51,33 +55,40 @@
   @apply flex-grow overflow-y-auto mt-4;
   max-height: calc(100vh - 8rem);
 }
+
 .list-item {
   @apply my-3;
 }
+
 .itinerary-card {
-  @apply flex items-center justify-between p-6 rounded-3xl transition duration-300;
-  background-color: var(--primary-color);
+  @apply flex items-center justify-between p-6 rounded-3xl transition duration-300 bg-primary
 }
+
 .itinerary-card:hover {
-  background-color: var(--secondary-color);
+  @apply bg-secondary;
 }
+
 .itinerary-name {
   @apply text-lg text-white;
   width: 30%;
 }
+
 .itinerary-dates {
   @apply text-lg text-white text-center;
   width: 40%;
 }
+
 .itinerary-info {
   @apply flex items-center justify-end;
   width: 30%;
 }
+
 .icon-pin {
   width: 2rem;
   height: 2rem;
   margin-right: 0.75rem;
 }
+
 .dest-count {
   @apply text-lg text-white;
 }
@@ -90,11 +101,13 @@
 .modal-overlay {
   @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
 }
+
 .modal-content {
   @apply bg-white p-8 rounded-2xl shadow-lg relative;
   width: 50%;
   max-width: 600px;
 }
+
 .modal-close {
   @apply absolute top-4 right-4 text-gray-500 hover:text-gray-800;
 }
@@ -102,6 +115,7 @@
 .modal-header .modal-title {
   @apply text-3xl font-bold text-gray-800;
 }
+
 .modal-hr {
   @apply mt-4;
   width: 60%;
@@ -112,15 +126,19 @@
 .form-root {
   @apply mt-6;
 }
+
 .form-field {
   @apply mb-6 h-20;
 }
+
 .label-text {
   @apply block text-gray-700;
 }
+
 .input-text {
   @apply w-full h-12 border p-2 rounded-full;
 }
+
 .select-countries {
   @apply w-full h-12 border rounded-full bg-white text-black border-gray-800;
 }
@@ -128,21 +146,27 @@
 .date-row {
   @apply flex justify-between items-center gap-4;
 }
+
 .date-field {
   @apply relative w-1/2 rounded-full;
 }
+
 .calendar-full {
   @apply w-full;
 }
+
 .calendar-input {
   @apply w-full h-12 border p-2 rounded-full pr-12;
 }
+
 .calendar-panel {
   @apply rounded-2xl shadow-lg;
 }
+
 .calendar-icon {
   @apply absolute top-1/2;
-  right: 0.75rem; /* aseguramos que el icono quede dentro del input */
+  right: 0.75rem;
+  /* aseguramos que el icono quede dentro del input */
   transform: translateY(-50%);
   pointer-events: none;
 }
@@ -154,6 +178,7 @@
 .form-errors {
   @apply h-2;
 }
+
 .error-text {
   @apply text-red-500 text-sm;
 }
@@ -161,82 +186,84 @@
 .form-submit {
   @apply flex justify-center mt-8;
 }
+
 .btn-submit {
-  @apply text-white w-3/5 h-14 px-4 py-2 rounded-full;
-  background-color: var(--primary-color);
+  @apply text-white w-3/5 h-14 px-4 py-2 rounded-full bg-primary;
 }
+
 .btn-submit:hover {
-  background-color: var(--secondary-color);
+  @apply bg-secondary;
 }
+
 ::ng-deep ng-dropdown-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    margin-top: 0.5rem;
-    background-color: #f9fafb;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1050;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 0.5rem;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1050;
 }
 
 ::ng-deep ng-dropdown-panel .ng-option {
-    padding: 0.5rem 1rem;
-    color: #374151;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  color: #374151;
+  cursor: pointer;
 }
 
 ::ng-deep ng-dropdown-panel .ng-option:hover {
-    background-color: #e5e7eb;
+  background-color: #e5e7eb;
 }
 
 ::ng-deep .ng-select .ng-value {
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 3rem;
-    padding: 0.3rem;
-    margin-right: 0.2rem;
-    font-size: 0.9rem;
+  @apply bg-primary;
+  color: white;
+  border-radius: 3rem;
+  padding: 0.3rem;
+  margin-right: 0.2rem;
+  font-size: 0.9rem;
 }
 
 ::ng-deep .ng-select .ng-value .ng-value-icon {
-    color: #ffffff;
-    margin-right: 0.5rem;
+  color: #ffffff;
+  margin-right: 0.5rem;
 }
 
 ::ng-deep .ng-select .ng-value .ng-value-icon:hover {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 ::ng-deep .ng-select {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    padding: 0.5rem 1rem;
-    min-height: 3rem;
-    width: 100%;
-    box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 0.5rem 1rem;
+  min-height: 3rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 ::ng-deep .ng-select .ng-value-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
 }
 
 ::ng-deep .ng-select .ng-input {
-    margin: 0;
-    padding: 0;
-    flex: 1;
-    align-self: center;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  align-self: center;
 }
 
 ::ng-deep p-calendar .p-inputtext,
 ::ng-deep p-calendar input.p-inputtext {
   @apply rounded-full;
   border-radius: 9999px !important;
-  padding-right: 3rem; 
+  padding-right: 3rem;
   box-sizing: border-box;
 }
