@@ -128,19 +128,20 @@
   @apply flex justify-between items-center gap-4;
 }
 .date-field {
-  @apply relative w-1/2;
+  @apply relative w-1/2 rounded-full;
 }
 .calendar-full {
   @apply w-full;
 }
 .calendar-input {
-  @apply w-full h-12 border p-2 rounded-full pr-10;
+  @apply w-full h-12 border p-2 rounded-full pr-12;
 }
 .calendar-panel {
   @apply rounded-2xl shadow-lg;
 }
 .calendar-icon {
-  @apply absolute right-3 top-1/2;
+  @apply absolute top-1/2;
+  right: 0.75rem; /* aseguramos que el icono quede dentro del input */
   transform: translateY(-50%);
   pointer-events: none;
 }
@@ -229,4 +230,12 @@
     padding: 0;
     flex: 1;
     align-self: center;
+}
+
+::ng-deep p-calendar .p-inputtext,
+::ng-deep p-calendar input.p-inputtext {
+  @apply rounded-full;
+  border-radius: 9999px !important;
+  padding-right: 3rem; 
+  box-sizing: border-box;
 }
