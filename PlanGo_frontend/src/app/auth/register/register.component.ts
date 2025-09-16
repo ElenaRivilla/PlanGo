@@ -26,6 +26,8 @@ export class RegisterComponent {
   errorMessageLN = '';
   errorMessageP = '';
   errorMessageRP = '';
+  showPassword = false;
+  showRepeatPassword = false;
 
   constructor(private auth: Auth, private router: Router, private registerService: RegisterService) {}
 
@@ -130,5 +132,11 @@ export class RegisterComponent {
     this.router.navigate(['/login']);
   }
 
-  
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleShowRepeatPassword(): void {
+    this.showRepeatPassword = !this.showRepeatPassword;
+  }
 }
