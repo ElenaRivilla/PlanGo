@@ -3,9 +3,9 @@
     [title]="marker.label || ''" (mapClick)="openInfoWindow(i, marker)">
   </map-marker>
   <map-info-window #infoWindow>
-    <div class="p-2 max-w-[320px] w-full bg-white shadow-xl">
-      <div class="flex justify-between items-center">
-        <span class="font-bold text-lg">
+    <div class="pg-map-info">
+      <div class="pg-map-title-row">
+        <span class="pg-map-title">
           {{ activeMarker?.place?.displayName?.text
           || activeMarker?.place?.accommodation
           || activeMarker?.place?.restaurant
@@ -13,12 +13,12 @@
           || activeMarker?.place?.name
           || '-' }}
         </span>
-        <span class="text-sm flex items-center gap-1">
+        <span class="pg-map-info-actions">
           <!-- i de información -->
           <button pTooltip="Ver más información en Google Maps" tooltipPosition="top" type="button"
             (click)="openGoogleMapsPlace()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray"
-              class="size-6">
+              class="pg-map-info-icon">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
             </svg>
@@ -26,44 +26,44 @@
         </span>
       </div>
       <div class="flex flex-row items-start">
-        <div class="text-gray-600 text-sm mb-2 w-[80%]">
+        <div class="pg-map-address">
           {{ activeMarker?.place?.formattedAddress
           || activeMarker?.place?.address
           || '-' }}
         </div>
-        <div class="flex justify-end ml-2 flex-grow items-center">
+        <div class="pg-map-rating">
           <!-- Estrella de rating -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-            class="w-4 h-4 text-yellow-400">
+            class="pg-map-star">
             <path
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
           </svg>
-          <h1 class="text-base">{{ activeMarker?.place?.rating || '4.4' }}</h1>
+          <h1 class="pg-map-rating-value">{{ activeMarker?.place?.rating || '4.4' }}</h1>
         </div>
       </div>
       <!-- Carrusel de fotos -->
-      <div class="w-full h-40 bg-gray-200 rounded flex items-center justify-center mb-2 relative">
+      <div class="pg-map-carousel">
         <ng-container
           *ngIf="(activeMarker?.place?.photos?.length || activeMarker?.place?.images?.length); else noImage">
-          <button class="absolute left-2 top-1/2 -translate-y-1/2 bg-white text-lg bg-opacity-70 rounded-full p-1"
+          <button class="pg-map-photo-btn pg-map-photo-btn-left"
             (click)="prevPhoto($event)">
             ‹
           </button>
-          <img [src]="getPhotoUrl(selectedPlaceImages[activePhotoIndex])" class="w-full h-40 object-cover rounded"
+          <img [src]="getPhotoUrl(selectedPlaceImages[activePhotoIndex])" class="pg-map-photo-img"
             alt="Imagen del lugar" />
-          <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-white text-lg bg-opacity-70 rounded-full p-1"
+          <button class="pg-map-photo-btn pg-map-photo-btn-right"
             (click)="nextPhoto($event)">
             ›
           </button>
-          <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+          <div class="pg-map-dots">
             <span *ngFor="let photo of (activeMarker.place.photos || activeMarker.place.images); let i = index"
-              class="w-2 h-2 rounded-full" [ngClass]="i === activePhotoIndex ? 'bg-[--primary-color]' : 'bg-gray-300'">
+              class="pg-map-dot" [ngClass]="i === activePhotoIndex ? 'bg-primary' : 'bg-gray-300'">
             </span>
           </div>
         </ng-container>
         <ng-template #noImage>
           <!-- Placeholder de imagen -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" class="w-16 h-16 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" class="pg-map-placeholder-svg">
             <rect width="48" height="48" rx="8" fill="#e5e7eb" />
             <path d="M16 32l8-8 8 8" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="20" cy="20" r="2" fill="#a1a1aa" />
