@@ -1,12 +1,150 @@
-/* Lo pondré para ocultar las flechitas en Chrome, Safari, Edge, Opera */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Y también para ocultar las flechitas en Firefox */
 .no-spinner[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.pg-expenses-root {
+  @apply flex h-screen;
+}
+
+.pg-expenses-main {
+  @apply flex flex-grow;
+}
+
+.pg-expenses-section {
+  @apply flex-grow p-8 pt-5 flex flex-col;
+}
+
+.pg-expenses-sticky {
+  @apply sticky top-0 bg-white z-10 pb-3;
+}
+
+.pg-expenses-header-row {
+  @apply flex flex-row h-20 justify-between items-center;
+}
+
+.pg-expenses-left {
+  @apply w-[30%];
+}
+
+.pg-expenses-title {
+  @apply text-4xl font-bold text-gray-800;
+}
+
+.pg-hr {
+  @apply border-black border-[1px] mt-4;
+}
+
+.pg-expenses-add-btn {
+  @apply h-12 bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-300;
+}
+
+.pg-error-small {
+  @apply text-red-500 text-sm mt-1;
+}
+
+.pg-expenses-totals-row {
+  @apply flex flex-row items-center justify-between w-full mt-4;
+}
+
+.pg-expenses-subtitle {
+  @apply text-xl font-bold text-gray-800;
+}
+
+.pg-expenses-total-badge {
+  @apply h-12 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
+}
+
+.pg-hr-full {
+  @apply w-full border-black border-[1px] mt-2;
+}
+
+.pg-expenses-list-wrap {
+  @apply flex-grow overflow-y-auto mt-4;
+}
+
+.pg-expense-item {
+  @apply flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-primary hover:bg-secondary transition duration-300 justify-between cursor-pointer;
+}
+
+.pg-expense-item-title {
+  @apply text-lg text-white;
+}
+
+.pg-expense-amount {
+  @apply text-white;
+}
+
+.pg-expense-details-section {
+  @apply p-8 border-l-2 border-gray w-[35%] h-screen overflow-y-auto;
+}
+
+.pg-cluster {
+  @apply mb-8 flex flex-col items-center justify-between;
+}
+
+.pg-expense-type-badge {
+  @apply rounded-full mt-6 bg-primary h-12 text-center text-white font-bold flex px-4 items-center;
+}
+
+.pg-badge {
+  @apply h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
+}
+
+.pg-hr-75 {
+  @apply w-[75%] border-black border-[1px] mt-2;
+}
+
+.pg-expense-description {
+  @apply w-full h-32 px-4 py-2 rounded-2xl border border-gray-300 resize-y whitespace-pre-line;
+}
+
+.pg-debtors-wrap {
+  @apply mb-4 h-64 overflow-y-auto;
+}
+
+.pg-debtors-header {
+  @apply flex flex-row items-center justify-between sticky top-0 bg-white z-10 p-2;
+}
+
+.pg-add-debtor-btn {
+  @apply bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full;
+}
+
+.pg-debtor-item {
+  @apply mb-3 mt-3 h-16;
+}
+
+.pg-debtor-row {
+  @apply flex flex-row items-start;
+}
+
+.pg-debtor-select-wrap {
+  @apply flex flex-col w-[85%];
+}
+
+.pg-select {
+  @apply h-12 border p-2 rounded-full;
+}
+
+.pg-debtor-amount-input {
+  @apply w-20 h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white no-spinner;
+}
+
+.pg-remove-icon {
+  @apply w-6 h-6;
+}
+
+.pg-submit-btn {
+  @apply bg-primary text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-secondary;
 }

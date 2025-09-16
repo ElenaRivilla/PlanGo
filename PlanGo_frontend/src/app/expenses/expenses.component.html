@@ -1,54 +1,50 @@
-<div class="flex h-screen">
+<div class="pg-expenses-root">
   <!-- Sidebar -->
   <app-header></app-header>
   <p-toast></p-toast>
   <!-- Main Content -->
-  <div class="flex flex-grow">
+  <div class="pg-expenses-main">
     <!-- Expenses Section -->
      
-    <section class="flex-grow p-8 pt-5 flex flex-col">
+    <section class="pg-expenses-section">
       <!-- Header -->
-      <div class="sticky top-0 bg-white z-10 pb-3">
-        <div class="flex flex-row h-20 justify-between items-center">
-          <div class="w-[30%]">
-            <h1 class="text-4xl font-bold text-gray-800">Gastos</h1>
-            <hr class="border-black border-[1px] mt-4">
+      <div class="pg-expenses-sticky">
+        <div class="pg-expenses-header-row">
+          <div class="pg-expenses-left">
+            <h1 class="pg-expenses-title">Gastos</h1>
+            <hr class="pg-hr">
           </div>
-          <button (click)="toggleForm()"
-            class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
+          <button (click)="toggleForm()" class="pg-expenses-add-btn">
             Añadir gasto
           </button>
           <div *ngIf="formSubmitted && expenseForm.errors?.['addDebtorRequiresPayer']"
-            class="text-red-500 text-sm mt-1">
+            class="pg-error-small">
             {{ validatorMessages['addDebtorRequiresPayer'] }}
           </div>
         </div>
-        <div class="flex flex-row items-center justify-between w-full mt-4">
-          <h3 class="text-xl font-bold text-gray-800">Gastos Totales</h3>
-          <div *ngIf="expenses.length > 0"
-            class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
-            {{ getTotalExpenses() | number:'1.2-2' }}€
+        <div class="pg-expenses-totals-row">
+          <h3 class="pg-expenses-subtitle">Gastos Totales</h3>
+          <div *ngIf="expenses.length > 0" class="pg-expenses-total-badge">
+            {{ getTotalExpenses() | number:'1.2-2' }}
           </div>
         </div>
-        <hr class="w-full border-black border-[1px] mt-2">
+        <hr class="pg-hr-full">
       </div>
 
       <!-- Expenses List -->
-      <div class="flex-grow overflow-y-auto mt-4">
+      <div class="pg-expenses-list-wrap">
         <div *ngIf="expenses.length == 0">
           <p class="text-xl pl-3 my-4">No hay gastos creados. ¡Añade el primero!</p>
         </div>
         <div *ngIf="expenses.length > 0">
           <ul>
             <li *ngFor="let expense of expenses" class="my-3">
-              <div
-                class="flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 justify-between cursor-pointer"
-                (click)="onClickExpense(expense)">
+              <div class="pg-expense-item" (click)="onClickExpense(expense)">
                 <div class="flex flex-col text-left">
-                  <h3 class="text-lg text-white">{{ expense.itinerary_name }} - {{ expense.city_name }}</h3>
+                  <h3 class="pg-expense-item-title">{{ expense.itinerary_name }} - {{ expense.city_name }}</h3>
                 </div>
                 <div class="flex items-center justify-end">
-                  <p class="text-white">{{ expense.total_amount | number:'1.2-2' }}€</p>
+                  <p class="pg-expense-amount">{{ expense.total_amount | number:'1.2-2' }}€</p>
                 </div>
               </div>
             </li>
@@ -71,20 +67,20 @@
             </div>
           </div>
           <div
-            class="rounded-full mt-6 bg-[--primary-color] h-12 text-center text-white font-bold flex px-4 items-center">
+            class="rounded-full mt-6 bg-primary h-12 text-center text-white font-bold flex px-4 items-center">
             Tipo: {{ selectedExpense.Gasto.type_expense === 'Equalitarian' ? 'Equitativo' : 'Personalizado' }}
           </div>
         </div>
         <div class="my-4 flex flex-row justify-between items-center">
           <h2 class="text-md">Costes totales:</h2>
-          <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+          <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
             {{ selectedExpense.Gasto.total_amount }}€
           </div>
         </div>
         <hr class="w-full border-black border-[1px]">
         <div class="mt-4 flex flex-row justify-between items-center">
           <h2 class="text-md">Pagado por:</h2>
-          <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+          <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
             {{ selectedExpense.Gasto.paid_by_name || 'Usuario' }}
           </div>
         </div>
@@ -97,7 +93,7 @@
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
             <div class="flex flex-row items-center justify-between">
               <h2 class="text-md">{{ ue.user_name || 'Usuario' }}:</h2>
-              <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+              <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
                 {{ ue.expected_share }}€
               </div>
             </div>
@@ -123,7 +119,7 @@
               <div class="flex flex-row items-center justify-between">
                 <h2 class="text-md">{{ ue.user_name || 'Usuario' }}:</h2>
                 <div
-                  class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+                  class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
                   {{ ue.expected_share }}€
                 </div>
               </div>
@@ -158,14 +154,14 @@
       </div>
       <div class="w-[30%] flex flex-row">
         <button type="button"
-          class="h-12 w-full bg-[--primary-color] hover:bg-[--secondary-color] rounded-full text-white mr-4"
+          class="h-12 w-full bg-primary hover:bg-secondary rounded-full text-white mr-4"
           (click)="setEqualitarian()"
-          [ngClass]="{'bg-[--primary-color] text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
+          [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
           Equitativo</button>
         <button type="button"
-          class="h-12 w-full bg-[--primary-color] hover:bg-[--secondary-color] rounded-full text-white"
+          class="h-12 w-full bg-primary hover:bg-secondary rounded-full text-white"
           (click)="setPersonalized()"
-          [ngClass]="{'bg-[--primary-color] text-white': expenseForm.value.type_expense === 'Personalized', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Personalized'}">
+          [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Personalized', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Personalized'}">
           Personalizado
         </button>
       </div>
@@ -215,7 +211,7 @@
           <!-- Total Amount -->
           <div class="w-[10%]">
             <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
-              class="w-full h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white appearance-none no-spinner"
+              class="w-full h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white appearance-none no-spinner"
               required>
           </div>
         </div>
@@ -245,7 +241,7 @@
           <!-- Parece que no funciona la primera condición value.payer-->
           <button type="button" (click)="addDebtor()"
             [disabled]="isAddDebtorDisabled()"
-            class="bg-[--primary-color] hover:bg-[--secondary-color] text-white px-4 py-2 rounded-full">
+            class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full">
             Añadir deudor
           </button>
         </div>
@@ -271,7 +267,7 @@
             <div class="flex flex-col items-center ml-4">
               <input *ngIf="expenseForm.get('type_expense')?.value !== 'Equalitarian'" formControlName="amount"
                 type="number" min="0" placeholder="00.00€"
-                class="w-20 h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white no-spinner"
+                class="w-20 h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white no-spinner"
                 required>
             </div>
             <button type="button" (click)="removeDebtor(i)" class="ml-2 mt-2">
@@ -293,7 +289,7 @@
       <!-- Submit Button -->
       <div class="flex justify-center mt-6">
         <button type="submit"
-          class="bg-[--primary-color] text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-[--secondary-color]">
+          class="bg-primary text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-secondary">
           Crear gasto
         </button>
       </div>
