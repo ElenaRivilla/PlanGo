@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pg-back-btn {
+	@apply flex items-center transition-all duration-200 bg-primary rounded-full hover:pr-4;
+}
+.pg-back-icon {
+	@apply size-9;
+}
+.pg-back-text {
+	@apply text-base text-white transition-all duration-200 whitespace-nowrap overflow-hidden;
+}
