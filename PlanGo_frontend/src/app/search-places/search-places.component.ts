@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { trigger, style, transition, animate, state } from '@angular/animations';
 import { HeaderComponent } from "../header/header.component";
-import { MapComponent } from "../map/map.component";
+import { MapComponent } from '../core/map/map.component';
 import { ParticipantsComponent } from "../participants/participants.component";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
@@ -103,15 +103,6 @@ export class SearchPlacesComponent {
   }
 
   ngOnInit(): void {
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => {
-        this.googlePlacesApiKey = data.googlePlacesApiKey;
-      },
-      error: (err: any) => {
-        console.log("No ha recibido la KEY de Google Places API.")
-      }
-    });
-
     this.route.queryParamMap.subscribe((params: ParamMap) => {
       this.selectedCategory = params.get('category');
       this.activeSection = params.get('category');
@@ -146,6 +137,17 @@ export class SearchPlacesComponent {
         // Si no hay destinationId, usa el valor por defecto
         this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
         this.loadPlaces(this.mapLocation.lat, this.mapLocation.lng);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.apiKeyService.getGooglePlacesApiKey().subscribe({
+      next: (data: any) => {
+        this.googlePlacesApiKey = data.googlePlacesApiKey;
+      },
+      error: (err: any) => {
+        console.log("No ha recibido la KEY de Google Places API.")
       }
     });
   }

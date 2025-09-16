@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../core/map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { switchMap, throwError } from 'rxjs';
 import { globals } from '../core/globals';

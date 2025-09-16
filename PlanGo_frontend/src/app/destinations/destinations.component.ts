@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../core/map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 import { ItinerariesService } from '../core/services/itineraries.service';

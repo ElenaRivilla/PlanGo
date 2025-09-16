@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../core/map/map.component';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -99,15 +99,6 @@ export class SavedPlacesComponent {
   }
 
   ngOnInit(): void {
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => {
-        this.googlePlacesApiKey = data.googlePlacesApiKey;
-      },
-      error: (err: any) => {
-        console.log("No ha recibido la KEY de Google Places API.")
-      }
-    });
-
     this.itinerariesService.getIdUser().subscribe({
       next: (userId: number | null) => {
         if (userId === null) {
@@ -120,6 +111,17 @@ export class SavedPlacesComponent {
       },
       error: (err: any) => {
         console.error('No se pudo obtener el userId', err);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.apiKeyService.getGooglePlacesApiKey().subscribe({
+      next: (data: any) => {
+        this.googlePlacesApiKey = data.googlePlacesApiKey;
+      },
+      error: (err: any) => {
+        console.log("No ha recibido la KEY de Google Places API.")
       }
     });
   }

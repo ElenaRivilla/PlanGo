@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, ViewChildren, QueryList } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
 import { ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { ApiKeyService } from '../core/services/api-key.service';
+import { ApiKeyService } from '../services/api-key.service';
 import { TooltipModule } from 'primeng/tooltip';
-import { SearchPlacesService } from '../core/services/search-places.service';
+import { SearchPlacesService } from '../services/search-places.service';
 
 @Component({
   standalone: true,
@@ -40,6 +40,10 @@ export class MapComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit(): void {
     this.apiKeyService.getGooglePlacesApiKey().subscribe({
       next: (data: any) => {
         this.googlePlacesApiKey = data.googlePlacesApiKey;
