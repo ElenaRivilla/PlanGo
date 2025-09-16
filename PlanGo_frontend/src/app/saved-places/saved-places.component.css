@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pg-saved-root {
+    @apply flex h-screen;
+}
+
+.pg-saved-main {
+    @apply flex flex-grow;
+}
+
+.pg-saved-section {
+    @apply flex-grow p-8 pt-5 flex flex-col;
+}
+
+.pg-itineraries-header {
+    @apply w-auto h-20 flex flex-row justify-between items-center;
+}
+
+.pg-saved-left {
+    @apply w-[50%];
+}
+
+.pg-saved-title {
+    @apply text-4xl font-bold text-gray-800;
+}
+
+.pg-hr {
+    @apply flex-grow border-black border-[1px] mt-4;
+}
+
+.pg-accordion {
+    @apply rounded-3xl border-gray-600 flex-grow mt-8;
+}
+
+.pg-accordion-header {
+    @apply mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-primary hover:bg-secondary transition duration-300;
+}
+
+.pg-acc-left {
+    @apply flex items-center gap-2;
+}
+
+.pg-acc-icon-wrapper {
+    @apply mr-4;
+}
+
+.pg-acc-title {
+    @apply text-lg text-white;
+}
+
+.pg-acc-icon {
+    @apply h-6 w-6;
+}
+
+.pg-accordion-content {
+    @apply overflow-hidden transition-all duration-300 ease-in-out bg-white px-4;
+}
+
+.pg-cards-grid {
+    @apply grid gap-2 w-full min-w-0 overflow-y-auto;
+}
+
+.pg-card {
+    @apply bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem];
+}
+
+.pg-card-img {
+    @apply w-full h-32 object-cover rounded mb-2;
+}
+
+.pg-card-title {
+    @apply font-bold text-lg text-center break-words w-full;
+}
+
+.pg-card-subtitle {
+    @apply text-gray-600 text-center text-sm break-words w-full;
+}
+
+.pg-no-items {
+    @apply py-6 text-center text-gray-500;
+}
+
+.pg-map-section {
+    @apply w-[35%];
+}

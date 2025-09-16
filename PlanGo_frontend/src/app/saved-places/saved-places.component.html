@@ -1,34 +1,32 @@
-<div class="flex h-screen">
+<div class="pg-saved-root">
     <!-- Sidebar -->
     <app-header></app-header>
 
     <!-- Main Content -->
-    <div class="flex flex-grow">
+    <div class="pg-saved-main">
         <!-- Places Section -->
-        <section class="flex-grow p-8 pt-5 flex flex-col">
+        <section class="pg-saved-section">
             <!-- Sticky Header -->
-            <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
-                <div class="w-[50%]">
-                    <h1 class="text-4xl font-bold text-gray-800">Lugares guardados</h1>
-                    <hr class="flex-grow border-black border-[1px] mt-4">
+            <div class="pg-itineraries-header">
+                <div class="pg-saved-left">
+                    <h1 class="pg-saved-title">Lugares guardados</h1>
+                    <hr class="pg-hr">
                 </div>
             </div>
 
             <!-- Accordion Sections -->
-            <div class="accordion rounded-3xl border-gray-600 flex-grow mt-8">
-                <div *ngFor="let section of sections; let i = index" class="accordion-item">
+            <div class="pg-accordion">
+                <div *ngFor="let section of sections; let i = index" class="pg-accordion-item">
                     <!-- Botón para abrir/cerrar la sección -->
-                    <button
-                        class="accordion-header mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
-                        (click)="toggleSection(i)">
-                        <span class="flex items-center gap-2">
-                            <span class="mr-4" [innerHTML]="svgIcons[i]"></span>
-                            <span class="text-lg text-white">{{ section.title }}</span>
+                    <button class="pg-accordion-header" (click)="toggleSection(i)">
+                        <span class="pg-acc-left">
+                            <span class="pg-acc-icon-wrapper" [innerHTML]="svgIcons[i]"></span>
+                            <span class="pg-acc-title">{{ section.title }}</span>
                         </span>
                         <div class="flex flex-row justify-end items-center">
                             <span class="transition-transform duration-300" [class.rotate-90]="section.isOpen">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="white" class="h-6 w-6">
+                                    stroke-width="1.5" stroke="white" class="pg-acc-icon">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                                 </svg>
@@ -36,33 +34,22 @@
                         </div>
                     </button>
                     <!-- Contenido de la sección -->
-                    <div class="accordion-content overflow-hidden transition-all duration-300 ease-in-out bg-white px-4"
-                        [class.max-h-0]="!section.isOpen" [style.maxHeight]="section.isOpen ? '44vh' : '0px'">
+                    <div class="pg-accordion-content" [class.max-h-0]="!section.isOpen" [style.maxHeight]="section.isOpen ? '44vh' : '0px'">
                         <!-- Alojamientos -->
                         <ng-container *ngIf="section.title === 'Alojamientos'">
                             <div *ngIf="section.isOpen">
-                                <div *ngIf="accommodations && accommodations.length > 0"
-                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                <div *ngIf="accommodations && accommodations.length > 0" class="pg-cards-grid"
                                     style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
-                                    <div *ngFor="let acc of accommodations"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
-                                        (click)="onPlaceSelect(acc)">
+                                    <div *ngFor="let acc of accommodations" class="pg-card" (click)="onPlaceSelect(acc)">
                                         <!-- ...contenido de la card... -->
-                                        <img *ngIf="acc.images?.length"
-                                            [src]="getPhotoUrl(acc.images[acc.activePhotoIndex || 0])"
-                                            alt="{{ acc.accommodation }}"
-                                            class="w-full h-32 object-cover rounded mb-2" />
-                                        <div class="font-bold text-md text-center break-words w-full">
-                                            {{ acc.name }}
-                                        </div>
-                                        <div class="text-gray-600 text-center text-sm break-words w-full">
-                                            {{ acc.address }}
-                                        </div>
+                                        <img *ngIf="acc.images?.length" [src]="getPhotoUrl(acc.images[acc.activePhotoIndex || 0])"
+                                            alt="{{ acc.accommodation }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ acc.name }}</div>
+                                        <div class="pg-card-subtitle">{{ acc.address }}</div>
                                     </div>
                                 </div>
-                                <div *ngIf="!accommodations || accommodations.length === 0"
-                                    class="py-6 text-center text-gray-500">
+                                <div *ngIf="!accommodations || accommodations.length === 0" class="pg-no-items">
                                     No hay alojamientos guardadas.
                                 </div>
                             </div>
@@ -70,26 +57,17 @@
                         <!-- Comer y beber -->
                         <ng-container *ngIf="section.title === 'Comer y beber'">
                             <div *ngIf="section.isOpen">
-                                <div *ngIf="restaurants && restaurants.length > 0"
-                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                <div *ngIf="restaurants && restaurants.length > 0" class="pg-cards-grid"
                                     style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
-                                    <div *ngFor="let rest of restaurants"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
-                                        (click)="onPlaceSelect(rest)">
-                                        <img *ngIf="rest.images?.length"
-                                            [src]="getPhotoUrl(rest.images[rest.activePhotoIndex || 0])"
-                                            alt="{{ rest.restaurant }}" class="w-full h-32 object-cover rounded mb-2" />
-                                        <div class="font-bold text-md text-center break-words w-full">
-                                            {{ rest.name }}
-                                        </div>
-                                        <div class="text-gray-600 text-center text-sm break-words w-full">
-                                            {{ rest.address }}
-                                        </div>
+                                    <div *ngFor="let rest of restaurants" class="pg-card" (click)="onPlaceSelect(rest)">
+                                        <img *ngIf="rest.images?.length" [src]="getPhotoUrl(rest.images[rest.activePhotoIndex || 0])"
+                                            alt="{{ rest.restaurant }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ rest.name }}</div>
+                                        <div class="pg-card-subtitle">{{ rest.address }}</div>
                                     </div>
                                 </div>
-                                <div *ngIf="!restaurants || restaurants.length === 0"
-                                    class="py-6 text-center text-gray-500">
+                                <div *ngIf="!restaurants || restaurants.length === 0" class="pg-no-items">
                                     No hay restaurantes guardadas.
                                 </div>
                             </div>
@@ -97,26 +75,17 @@
                         <!-- Cosas que hacer -->
                         <ng-container *ngIf="section.title === 'Cosas que hacer'">
                             <div *ngIf="section.isOpen">
-                                <div *ngIf="activities && activities.length > 0"
-                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                <div *ngIf="activities && activities.length > 0" class="pg-cards-grid"
                                     style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
-                                    <div *ngFor="let act of activities"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
-                                        (click)="onPlaceSelect(act)">
-                                        <img *ngIf="act.images?.length"
-                                            [src]="getPhotoUrl(act.images[act.activePhotoIndex || 0])"
-                                            alt="{{ act.activity }}" class="w-full h-32 object-cover rounded mb-2" />
-                                        <div class="font-bold text-md text-center break-words w-full">
-                                            {{ act.name }}
-                                        </div>
-                                        <div class="text-gray-600 text-center text-sm break-words w-full">
-                                            {{ act.address }}
-                                        </div>
+                                    <div *ngFor="let act of activities" class="pg-card" (click)="onPlaceSelect(act)">
+                                        <img *ngIf="act.images?.length" [src]="getPhotoUrl(act.images[act.activePhotoIndex || 0])"
+                                            alt="{{ act.activity }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ act.name }}</div>
+                                        <div class="pg-card-subtitle">{{ act.address }}</div>
                                     </div>
                                 </div>
-                                <div *ngIf="!activities || activities.length === 0"
-                                    class="py-6 text-center text-gray-500">
+                                <div *ngIf="!activities || activities.length === 0" class="pg-no-items">
                                     No hay actividades guardadas.
                                 </div>
                             </div>
@@ -127,7 +96,7 @@
         </section>
 
         <!-- Map Section -->
-        <section class="map w-[35%]">
+        <section class="pg-map-section">
             <app-map #mapRef [center]="mapLocation" [zoom]="13" [markers]="markers" [selectedPlace]="selectedPlace"
                 [selectedPlaceImages]="selectedPlaceImages">
             </app-map>
