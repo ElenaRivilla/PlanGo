@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pg-header {
+  @apply h-lvh bg-primary overflow-hidden;
+}
+.pg-header-nav {
+  @apply h-lvh flex flex-col justify-between;
+}
+.pg-header-inner {
+  @apply flex flex-col items-start justify-center m-3;
+}
+.pg-header-toggle {
+  @apply size-8 my-2 ml-1 mb-6 cursor-pointer;
+}
+.pg-header-btn-svg {
+  @apply size-8 my-2 ml-1;
+}
+.pg-header-expanded {
+  @apply flex flex-col h-full w-full;
+}
+.pg-header-profile {
+  @apply p-2 w-full;
+}
+.pg-header-avatar {
+  @apply w-[120px] h-[120px] rounded-full object-cover mb-4 shadow-lg;
+}
+.pg-header-name {
+  @apply text-2xl text-white mb-2;
+}
+.pg-header-email {
+  @apply text-sm text-white;
+}
+.pg-header-itineraries {
+  @apply mt-6;
+}
+.pg-header-actions {
+  @apply p-2 w-full h-80 flex-grow flex flex-col justify-between;
+}
+.pg-header-action-btn {
+  @apply h-12 bg-white text-black rounded-full;
+}

@@ -1,9 +1,9 @@
 <p-toast></p-toast>
-<header [@expandHeader]="headerState" class="h-lvh bg-[--primary-color] overflow-hidden">
-    <nav class="h-lvh flex flex-col justify-between">
-        <div class="flex flex-col items-start justify-center m-3">
+<header [@expandHeader]="headerState" class="pg-header">
+    <nav class="pg-header-nav">
+        <div class="pg-header-inner">
             <svg (click)="toggleHeaderWidth()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                stroke-width="1" stroke="white" class="size-8 my-2 ml-1 mb-6 cursor-pointer">
+                stroke-width="1" stroke="white" class="pg-header-toggle">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
 
@@ -13,7 +13,7 @@
                     (mouseenter)="setHoverState('itineraries', 'hover')"
                     (mouseleave)="setHoverState('itineraries', 'default')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                        stroke="white" class="size-8 my-2 ml-1">
+                        stroke="white" class="pg-header-btn-svg">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
                     </svg>
@@ -40,22 +40,22 @@
 
             <!-- Modo expandido -->
             <ng-template #expandedContent>
-                <div class="flex flex-col h-full w-full">
-                    <div class="p-2 w-full">
+                <div class="pg-header-expanded">
+                    <div class="pg-header-profile">
                         <img [src]="userPhoto ? userPhoto : 'https://t3.ftcdn.net/jpg/05/87/76/66/360_F_587766653_PkBNyGx7mQh9l1XXPtCAq1lBgOsLl6xH.jpg'"
-                            alt="Foto de perfil" class="w-[120px] h-[120px] rounded-full object-cover mb-4 shadow-lg" />
-                        <h1 class="text-2xl text-white mb-2">{{ userName }}</h1>
-                        <h2 class="text-md text-white">{{ userEmail }}</h2>
-                        <div class="mt-6">
+                            alt="Foto de perfil" class="pg-header-avatar" />
+                        <h1 class="pg-header-name">{{ userName }}</h1>
+                        <h2 class="pg-header-email">{{ userEmail }}</h2>
+                        <div class="pg-header-itineraries">
                             <h4 class="text-white text-md font-bold">{{ itinerariesCount }}</h4>
                             <h4 class="text-white text-md">Itinerarios</h4>
                         </div>
                         <hr class="my-6">
                     </div>
-                    <div class="p-2 w-full h-80 flex-grow flex flex-col justify-between">
-                        <button (click)="onResetPassword()" class="h-12 bg-white text-black rounded-full">Restablecer
+                    <div class="pg-header-actions">
+                        <button (click)="onResetPassword()" class="pg-header-action-btn">Restablecer
                             contraseña</button>
-                        <button (click)="authService.logout()" class="h-12 bg-white text-black rounded-full">Cerrar
+                        <button (click)="authService.logout()" class="pg-header-action-btn">Cerrar
                             sesión</button>
                     </div>
                 </div>
