@@ -106,6 +106,7 @@
   @apply mt-4;
   width: 60%;
   border-width: 1px;
+  border-color: black;
 }
 
 .form-root {
