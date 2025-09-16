@@ -42,7 +42,11 @@
 }
 
 .expenses-pill {
-    @apply rounded-full text-white text-center text-xl h-10 w-20 flex items-center justify-center bg-primary;
+    @apply rounded-full text-white text-center text-xl h-10 min-w-[75px] w-20 flex items-center justify-center bg-primary;
+}
+
+svg {
+    @apply h-10 w-10;
 }
 
 .expenses-pill.small {

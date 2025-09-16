@@ -123,7 +123,7 @@
 }
 
 .pg-select-full {
-  @apply w-full h-12 border p-2 rounded-full;
+  @apply w-full h-12 border p-2 rounded-full border-gray-700;
 }
 
 .pg-total-amount-input {
@@ -131,7 +131,7 @@
 }
 
 .pg-textarea-large {
-  @apply w-full h-24 border p-2 rounded-lg;
+  @apply w-full h-24 border p-2 rounded-lg border-gray-700;
 }
 
 .pg-flex-col {
@@ -199,7 +199,7 @@
 }
 
 .pg-debtors-wrap {
-  @apply mb-4 h-64 overflow-y-auto;
+  @apply mb-4 h-64 overflow-y-auto border-gray-700;
 }
 
 .pg-debtors-header {
@@ -223,7 +223,7 @@
 }
 
 .pg-select {
-  @apply h-12 border p-2 rounded-full;
+  @apply h-12 border p-2 rounded-full border-gray-700;
 }
 
 .pg-debtor-amount-input {
