@@ -29,7 +29,7 @@
                 <div *ngFor="let section of sections; let i = index" class="accordion-item">
                     <!-- Botón para abrir/cerrar la sección -->
                     <button
-                        class="accordion-header mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
+                        class="accordion-header mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-primary hover:bg-secondary transition duration-300"
                         (click)="toggleSection(i)">
                         <span class="flex items-center gap-2">
                             <span class="mr-4" [innerHTML]="svgIcons[i]"></span>

@@ -32,7 +32,7 @@
                     <div class="accordion-item">
                         <!-- Botón para abrir/cerrar la sección -->
                         <button
-                            class="accordion-header mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
+                            class="accordion-header mb-4 w-full flex flex-row items-center justify-between h-20 p-6 rounded-3xl bg-primary hover:bg-secondary transition duration-300"
                             (click)="toggleSection(getActiveSectionIndex())">
                             <div class="w-auto flex flex-row">
                                 <span class="mr-4" [innerHTML]="svgIcons[getActiveSectionIndex()]"></span>
@@ -73,7 +73,7 @@
                                             (mouseleave)="setHoverState(place.id + '-addPlaces', 'default')"
                                             (mouseenter)="setHoverState(place.id + '-addPlaces', 'hover')"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            class="size-6 hover:stroke-[--primary-color]">
+                                            class="size-6 hover:stroke-primary">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                                         </svg>
@@ -89,7 +89,7 @@
                                             (mouseleave)="setHoverState(place.id + '-savePlaces', 'default')"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor"
-                                            class="size-6 ml-2 hover:stroke-[--primary-color] cursor-pointer">
+                                            class="size-6 ml-2 hover:stroke-primary cursor-pointer">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                         </svg>
