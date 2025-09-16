@@ -40,10 +40,10 @@
           <ul>
             <li *ngFor="let expense of expenses" class="my-3">
               <div class="pg-expense-item" (click)="onClickExpense(expense)">
-                <div class="flex flex-col text-left">
+                <div class="pg-flex-col text-left">
                   <h3 class="pg-expense-item-title">{{ expense.itinerary_name }} - {{ expense.city_name }}</h3>
                 </div>
-                <div class="flex items-center justify-end">
+                <div class="pg-flex-end">
                   <p class="pg-expense-amount">{{ expense.total_amount | number:'1.2-2' }}€</p>
                 </div>
               </div>
@@ -54,46 +54,45 @@
     </section>
 
     <!-- Expense Details Section -->
-    <section class="p-8 border-l-2 border-gray w-[35%] h-screen overflow-y-auto">
+    <section class="pg-expense-details-section">
       <div *ngIf="selectedExpense; else noExpense">
         <!-- Cluster 1 -->
-        <div class="mb-8 flex flex-col items-center justify-between">
-          <div class="flex flex-col">
-            <div class="flex flex-row">
+        <div class="pg-cluster">
+          <div class="pg-flex-col">
+            <div class="pg-flex-row">
               <h1 class="text-xl font-bold">Nombre: </h1>
               <span class="mx-2"></span>
-              <h1 class="text-xl font-normal flex flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
+              <h1 class="text-xl font-normal pg-flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
                 - {{ selectedExpense.Gasto.city_name }}</h1>
             </div>
           </div>
-          <div
-            class="rounded-full mt-6 bg-primary h-12 text-center text-white font-bold flex px-4 items-center">
+          <div class="pg-expense-type-badge">
             Tipo: {{ selectedExpense.Gasto.type_expense === 'Equalitarian' ? 'Equitativo' : 'Personalizado' }}
           </div>
         </div>
-        <div class="my-4 flex flex-row justify-between items-center">
-          <h2 class="text-md">Costes totales:</h2>
-          <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
+          <div class="pg-row-between">
+          <h2 class="pg-text-md">Costes totales:</h2>
+          <div class="pg-badge">
             {{ selectedExpense.Gasto.total_amount }}€
           </div>
         </div>
-        <hr class="w-full border-black border-[1px]">
-        <div class="mt-4 flex flex-row justify-between items-center">
-          <h2 class="text-md">Pagado por:</h2>
-          <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
+        <hr class="pg-hr-full">
+          <div class="pg-row-between">
+          <h2 class="pg-text-md">Pagado por:</h2>
+          <div class="pg-badge">
             {{ selectedExpense.Gasto.paid_by_name || 'Usuario' }}
           </div>
         </div>
-        <hr class="w-full border-black border-[1px] mt-4">
+        <hr class="pg-hr-full mt-4">
 
         <!-- Cluster 2 -->
         <div class="mt-8">
           <h1 class="text-xl font-bold">Gastos individuales</h1>
-          <hr class="w-[75%] border-black border-[1px] mt-2">
+          <hr class="pg-hr-75">
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
-            <div class="flex flex-row items-center justify-between">
-              <h2 class="text-md">{{ ue.user_name || 'Usuario' }}:</h2>
-              <div class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
+            <div class="pg-flex-between">
+                <h2 class="pg-text-md">{{ ue.user_name || 'Usuario' }}:</h2>
+              <div class="pg-badge">
                 {{ ue.expected_share }}€
               </div>
             </div>
@@ -104,8 +103,8 @@
         <!-- Cluster 3 -->
         <div class="mt-8">
           <h1 class="text-xl font-bold">Descripción</h1>
-          <hr class="w-[75%] border-black border-[1px] mt-2 mb-2">
-          <p class="w-full h-32 px-4 py-2 rounded-2xl border border-gray-300 resize-y whitespace-pre-line">
+          <hr class="pg-hr-75 mt-2 mb-2">
+          <p class="pg-expense-description">
             {{ selectedExpense.Gasto.description }}
           </p>
         </div>
@@ -113,13 +112,12 @@
         <!-- Cluster 4 -->
         <div class="mt-8">
           <h1 class="text-xl font-bold">Deuda</h1>
-          <hr class="w-[75%] border-black border-[1px] mt-2">
+          <hr class="pg-hr-75">
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
             <ng-container *ngIf="ue.user_name !== selectedExpense.Gasto.paid_by_name">
-              <div class="flex flex-row items-center justify-between">
-                <h2 class="text-md">{{ ue.user_name || 'Usuario' }}:</h2>
-                <div
-                  class="h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center">
+              <div class="pg-flex-between">
+                  <h2 class="pg-text-md">{{ ue.user_name || 'Usuario' }}:</h2>
+                <div class="pg-badge">
                   {{ ue.expected_share }}€
                 </div>
               </div>
@@ -138,28 +136,28 @@
 </div>
 
 <!-- Modal -->
-<div *ngIf="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-8 rounded-2xl shadow-lg w-[55%] h-auto relative">
-    <button (click)="toggleForm()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+<div *ngIf="showForm" class="pg-modal-overlay">
+  <div class="pg-modal-container">
+    <button (click)="toggleForm()" class="pg-modal-close">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
-    <div class="flex flex-row justify-between items-center">
-      <div class="w-[70%]">
+    <div class="pg-modal-top-row">
+      <div class="pg-w-70">
         <h1 class="text-3xl font-bold text-gray-800">Nuevo gasto</h1>
         <hr class="w-[60%] border-black border-[1px] mt-4">
       </div>
-      <div class="w-[30%] flex flex-row">
+      <div class="pg-w-30 pg-flex-row">
         <button type="button"
-          class="h-12 w-full bg-primary hover:bg-secondary rounded-full text-white mr-4"
+          class="pg-toggle-btn mr-4"
           (click)="setEqualitarian()"
           [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
           Equitativo</button>
         <button type="button"
-          class="h-12 w-full bg-primary hover:bg-secondary rounded-full text-white"
+          class="pg-toggle-btn"
           (click)="setPersonalized()"
           [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Personalized', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Personalized'}">
           Personalizado
@@ -170,10 +168,10 @@
     <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
       <div class="flex flex-row justify-between mb-10 mt-3 h-16">
         <!-- Itinerary -->
-        <div class="w-[47%]">
+    <div class="pg-w-47">
           <label for="itinerary" class="block text-gray-700">Itinerario *</label>
           <select id="itinerary" formControlName="itinerary" (change)="onItineraryChange()"
-            class="w-full h-12 border p-2 rounded-full" required>
+      class="pg-select-full" required>
             <option value="" disabled selected>Selecciona un itinerario</option>
             <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
           </select>
@@ -183,10 +181,10 @@
           </div>
         </div>
         <!-- Destination -->
-        <div class="w-[47%]">
+        <div class="pg-w-47">
           <label for="destination" class="block text-gray-700">Destino *</label>
           <select id="destination" formControlName="destination" (change)="onDestinationsChange()"
-            class="w-full h-12 border p-2 rounded-full" required>
+            class="pg-select-full" required>
             <option value="" disabled selected>Selecciona un destino</option>
             <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
           </select>
@@ -197,21 +195,21 @@
         </div>
       </div>
 
-      <div class="h-28">
+        <div class="h-28">
         <label for="paidByUser" class="block text-gray-700">Pagado por el usuario *</label>
         <div class="flex flex-row w-full items-center justify-between">
           <!-- Paid By -->
-          <div class="w-[85%]">
+          <div class="pg-w-85">
             <select id="paidByUser" formControlName="payer" (change)="onPayerChange()"
-              class="w-full h-12 border p-2 rounded-full" required>
+              class="pg-select-full" required>
               <option value="" disabled selected>Selecciona un pagador</option>
               <option *ngFor="let p of participants" [value]="p.participant_id">{{ p.participant_name }}</option>
             </select>
           </div>
           <!-- Total Amount -->
-          <div class="w-[10%]">
+          <div class="pg-w-10">
             <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
-              class="w-full h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white appearance-none no-spinner"
+              class="pg-total-amount-input"
               required>
           </div>
         </div>
@@ -230,25 +228,25 @@
       <!-- Description -->
       <div class="mb-4">
         <label for="description" class="block text-gray-700">Descripción</label>
-        <textarea id="description" formControlName="description" class="w-full h-24 border p-2 rounded-lg"
+        <textarea id="description" formControlName="description" class="pg-textarea-large"
           placeholder="Escribe una descripción detallada sobre el gasto..."></textarea>
       </div>
 
       <!-- Debtors -->
       <div formArrayName="debtors" class="mb-4 h-64 overflow-y-auto">
-        <div class="flex flex-row items-center justify-between sticky top-0 bg-white z-10 p-2">
+        <div class="pg-debtors-header">
           <label class="block text-gray-700">Deudores *</label>
           <!-- Parece que no funciona la primera condición value.payer-->
           <button type="button" (click)="addDebtor()"
             [disabled]="isAddDebtorDisabled()"
-            class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full">
+            class="pg-add-debtor-btn">
             Añadir deudor
           </button>
         </div>
         <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-3 mt-3 h-16">
           <div class="flex flex-row items-start">
-            <div class="flex flex-col w-[85%]">
-              <select formControlName="id" class="h-12 border p-2 rounded-full" required>
+            <div class="pg-flex-col pg-w-85">
+              <select formControlName="id" class="pg-select-full" required>
                 <option value="" disabled selected>Selecciona deudor</option>
                 <option *ngFor="let p of getPossibleDebtors(i)" [value]="p.participant_id">{{ p.participant_name }}
                 </option>
@@ -264,10 +262,10 @@
                 </div>
               </div>
             </div>
-            <div class="flex flex-col items-center ml-4">
+            <div class="pg-debtor-amount-wrap">
               <input *ngIf="expenseForm.get('type_expense')?.value !== 'Equalitarian'" formControlName="amount"
                 type="number" min="0" placeholder="00.00€"
-                class="w-20 h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white no-spinner"
+                class="pg-debtor-amount-input"
                 required>
             </div>
             <button type="button" (click)="removeDebtor(i)" class="ml-2 mt-2">
@@ -289,7 +287,7 @@
       <!-- Submit Button -->
       <div class="flex justify-center mt-6">
         <button type="submit"
-          class="bg-primary text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-secondary">
+          class="pg-submit-btn">
           Crear gasto
         </button>
       </div>

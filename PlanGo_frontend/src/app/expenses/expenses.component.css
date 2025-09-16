@@ -65,9 +65,6 @@
   @apply h-12 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
 }
 
-.pg-hr-full {
-  @apply w-full border-black border-[1px] mt-2;
-}
 
 .pg-expenses-list-wrap {
   @apply flex-grow overflow-y-auto mt-4;
@@ -86,7 +83,88 @@
 }
 
 .pg-expense-details-section {
-  @apply p-8 border-l-2 border-gray w-[35%] h-screen overflow-y-auto;
+  @apply p-8 border-l-2 border-gray-300 w-[35%] h-screen overflow-y-auto;
+}
+
+
+.pg-row-between {
+  @apply my-4 flex flex-row justify-between items-center;
+}
+
+.pg-hr-full {
+  @apply w-full border-black border-[1px] mt-2;
+}
+
+.pg-hr-75 {
+  @apply w-[75%] border-black border-[1px] mt-2;
+}
+
+.pg-text-md {
+  @apply text-base;
+}
+
+
+.pg-modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.pg-modal-container {
+  @apply bg-white p-8 rounded-2xl shadow-lg w-[55%] h-auto relative;
+}
+
+.pg-modal-close {
+  @apply absolute top-4 right-4 text-gray-500 hover:text-gray-800;
+}
+
+.pg-modal-top-row {
+  @apply flex flex-row justify-between items-center;
+}
+
+.pg-toggle-btn {
+  @apply h-12 w-full bg-primary hover:bg-secondary rounded-full text-white;
+}
+
+.pg-select-full {
+  @apply w-full h-12 border p-2 rounded-full;
+}
+
+.pg-total-amount-input {
+  @apply w-full h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white appearance-none no-spinner;
+}
+
+.pg-textarea-large {
+  @apply w-full h-24 border p-2 rounded-lg;
+}
+
+.pg-flex-col {
+  @apply flex flex-col;
+}
+
+.pg-flex-row {
+  @apply flex flex-row;
+}
+
+.pg-flex-between {
+  @apply flex flex-row justify-between items-center;
+}
+
+.pg-flex-end {
+  @apply flex items-center justify-end;
+}
+
+.pg-w-70 { @apply w-[70%]; }
+.pg-w-30 { @apply w-[30%]; }
+.pg-w-47 { @apply w-[47%]; }
+.pg-w-85 { @apply w-[85%]; }
+.pg-w-10 { @apply w-[10%]; }
+.pg-w-20 { @apply w-20; }
+
+.pg-empty-center {
+  @apply flex items-center justify-center h-full;
+}
+
+.pg-debtor-amount-wrap {
+  @apply flex flex-col items-center ml-4;
 }
 
 .pg-cluster {
@@ -99,10 +177,6 @@
 
 .pg-badge {
   @apply h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
-}
-
-.pg-hr-75 {
-  @apply w-[75%] border-black border-[1px] mt-2;
 }
 
 .pg-expense-description {
