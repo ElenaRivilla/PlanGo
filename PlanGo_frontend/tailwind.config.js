@@ -5,6 +5,10 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: '#4c43ce',
+        secondary: '#6c61ff',
+      },
       fontFamily: {
         sans: ['Montserrat', 'Lato', 'system-ui', 'sans-serif'],
       }

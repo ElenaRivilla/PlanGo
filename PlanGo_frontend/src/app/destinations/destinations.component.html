@@ -1,22 +1,22 @@
-<div class="flex h-screen">
+<div class="destinations-root">
   <!-- Sidebar -->
   <app-header></app-header>
   <p-toast></p-toast>
   <!-- Main Content -->
-  <div class="flex flex-grow">
+  <div class="main-layout">
     <!-- Destinations Section -->
-    <section class="flex-grow p-8 pt-5 flex flex-col">
+    <section class="destinations-section">
       <app-back-button></app-back-button>
       <!-- Sticky Header -->
-      <div class="sticky top-0 bg-white z-10 pb-3">
-        <div class="h-20 flex flex-row justify-between items-center">
-          <div class="flex flex-col">
-            <h1 class="text-2xl font-bold">{{ selectedItinerary?.itinerary_name }}</h1>
-            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd/MM/yyyy':'es-ES' }} - {{
+      <div class="sticky-header">
+        <div class="header-top">
+          <div class="header-info">
+            <h1 class="header-title">{{ selectedItinerary?.itinerary_name }}</h1>
+            <time class="header-dates">{{ selectedItinerary?.start_date | date:'dd/MM/yyyy':'es-ES' }} - {{
               selectedItinerary?.end_date | date:'dd/MM/yyyy':'es-ES' }}</time>
           </div>
-          <div class="flex flex-row items-center">
-            <div class="h-10 w-px bg-gray-700 mx-4"></div>
+          <div class="header-right">
+            <div class="divider-vertical"></div>
             <app-day-counter
               [city]="'Total'"
               [idDestino]="0"
@@ -32,74 +32,71 @@
               [destinationStartDate]="itineraryStartDate"
               [disabled]="true">
             </app-day-counter>
+
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="size-6">
+              stroke="currentColor" class="icon-moon">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
             </svg>
-            <div class="h-10 w-px bg-gray-700 mx-4"></div>
-            <div
-              class="bg-[--primary-color] text-white rounded-full text-center text-xl h-10 w-20 flex items-center justify-center">
+            <div class="divider-vertical"></div>
+            <div class="expenses-pill">
               {{ getTotalExpenses() }}€
             </div>
           </div>
         </div>
-        <div class="h-24 w-full flex justify-center items-center">
-          <h1 class="text-4xl font-bold">{{ formatCountries() }}</h1>
+        <div class="countries-title">
+          <h1 class="countries-text">{{ formatCountries() }}</h1>
         </div>
       </div>
       <!-- Input de ciudades -->
-      <div class="relative w-full h-16">
+      <div class="city-input-root">
         <input type="text" [(ngModel)]="searchText" [disabled]="getOccupiedDays() >= itineraryTotalDays"
           (input)="onCitySearch()" (click)="onInputClick()" placeholder="Buscar ciudad..."
-          class="w-full h-12 border rounded-full bg-white text-black border-gray-800 p-2" />
+          class="city-input" />
         <!-- Overlay para capturar el click cuando el input está deshabilitado -->
         <div *ngIf="getOccupiedDays() >= itineraryTotalDays" (click)="onInputClick()"
-          class="absolute top-0 left-0 w-full h-12 cursor-not-allowed z-20" style="background: transparent;">
-        </div>
+          class="overlay-disabled"></div>
         <!-- Dropdown de ciudades -->
-        <ul *ngIf="cities.length > 0"
-          class="absolute left-0 top-[4rem] w-full max-h-[25rem] h-auto mt-0 border rounded bg-white text-black border-gray-800 overflow-y-auto z-50 shadow-lg">
-          <li *ngFor="let city of cities" class="p-2 hover:bg-gray-100 cursor-pointer" (click)="onCitySelect(city)">
+        <ul *ngIf="cities.length > 0" class="cities-dropdown">
+          <li *ngFor="let city of cities" class="city-item" (click)="onCitySelect(city)">
             {{ city.adminName1 ? city.adminName1 + ', ' : '' }}{{ city.name }}
           </li>
         </ul>
-        <div *ngIf="showMaxDaysError" class="absolute left-0 bottom-0 w-full mt-2 text-red-500 text-xs">
+        <div *ngIf="showMaxDaysError" class="max-days-error">
           {{ ValidatorMessages['maxDestinations'] }}
         </div>
       </div>
       <!-- Sticky Icons Section -->
-      <div
-        class="sticky top-[6rem] mt-2 bg-white z-10 border-y-2 border-gray-700 w-full flex justify-center items-center">
-        <div class="flex flex-row justify-between w-[90%] items-center">
+      <div class="sticky-icons">
+        <div class="icons-grid">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="h-8 w-8">
+            stroke="currentColor" class="icon">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
           </svg>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="h-8 w-8">
+            stroke="currentColor" class="icon">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
           </svg>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="h-8 w-8">
+            stroke="currentColor" class="icon">
             <path
               d="M3 5V19M3 16H21M21 19V13.2C21 12.0799 21 11.5198 20.782 11.092C20.5903 10.7157 20.2843 10.4097 19.908 10.218C19.4802 10 18.9201 10 17.8 10H11V15.7273M7 12H7.01M8 12C8 12.5523 7.55228 13 7 13C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11C7.55228 11 8 11.4477 8 12Z"
               stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          <svg fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8">
+          <svg class="icon-fill" fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path
-              d="M16.84,11.63A3,3,0,0,0,19,10.75l2.83-2.83a1,1,0,0,0,0-1.41,1,1,0,0,0-1.42,0L17.55,9.33a1,1,0,0,1-1.42,0h0L19.67,5.8a1,1,0,1,0-1.42-1.42L14.72,7.92a1,1,0,0,1,0-1.41l2.83-2.83a1,1,0,1,0-1.42-1.42L13.3,5.09a3,3,0,0,0,0,4.24h0L12,10.62,3.73,2.32l-.1-.06a.71.71,0,0,0-.17-.11l-.18-.07L3.16,2H3.09l-.2,0a.57.57,0,0,0-.18,0,.7.7,0,0,0-.17.09l-.16.1-.07,0-.06.1a1,1,0,0,0-.11.17,1.07,1.07,0,0,0-.07.19s0,.07,0,.11a11,11,0,0,0,3.11,9.34l2.64,2.63-5.41,5.4a1,1,0,0,0,0,1.42,1,1,0,0,0,.71.29,1,1,0,0,0,.71-.29L9.9,15.57h0l2.83-2.83h0l2-2A3,3,0,0,0,16.84,11.63ZM9.19,13.45,6.56,10.81A9.06,9.06,0,0,1,4,5.4L10.61,12Zm6.24.57A1,1,0,0,0,14,15.44l6.3,6.3A1,1,0,0,0,21,22a1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.42Z" />
+              d="M16.84,11.63A3,3,0,0,0,19,10.75l2.83-2.83a1,1,0,0,0,0-1.41,1,1,0,0,0-1.42,0L17.55,9.33a1,1,0,0,1-1.42,0h0L19.67,5.8a1,1,0,1,0-1.42-1.42L14.72,7.92a1,1,0,0,1,0-1.41l2.83-2.83a1,1,0,1,0-1.42-1.42L13.3,5.09a3,3,0,0,0,0,4.24h0L12,10.62,3.73,2.32l-.1-.06a.71.71,0,0,0-.17-.11l-.18-.07L3.16,2H3.09l-.2,0a.57.57,0,0,0-.18,0,.7.7,0,0,0-.17.09l-.16.10-.07,0-.06.1a1,1,0,0,0-.11.17,1.07,1.07,0,0,0-.07.19s0,.07,0,.11a11,11,0,0,0,3.11,9.34l2.64,2.63-5.41,5.4a1,1,0,0,0,0,1.42,1,1,0,0,0,.71.29,1,1,0,0,0,.71-.29L9.9,15.57h0l2.83-2.83h0l2-2A3,3,0,0,0,16.84,11.63ZM9.19,13.45,6.56,10.81A9.06,9.06,0,0,1,4,5.4L10.61,12Zm6.24.57A1,1,0,0,0,14,15.44l6.3,6.3A1,1,0,0,0,21,22a1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.42Z" />
           </svg>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="h-8 w-8">
+            stroke="currentColor" class="icon">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
           </svg>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="h-8 w-8">
+            stroke="currentColor" class="icon">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
           </svg>
@@ -107,11 +104,10 @@
       </div>
 
       <!-- Destinations List -->
-      <div *ngIf="destinations.length > 0" class="container-destinations flex-grow overflow-y-auto">
-        <div *ngFor="let destination of destinations"
-          class="flex flex-row mt-4 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
-          style="cursor:pointer;">
-          <h3 class="text-lg text-white w-[93px]">{{ destination.city_name }}</h3>
+      <div *ngIf="destinations.length > 0" class="container-destinations">
+        <div *ngFor="let destination of destinations" class="dest-card" style="cursor:pointer;">
+          <h3 class="dest-title">{{ destination.city_name }}</h3>
+
           <app-day-counter [idDestino]="destination.destination_id" [city]="destination.city_name"
             [max]="itineraryTotalDays" [startDateStr]="itineraryStartDate" [itineraryStartDate]="itineraryStartDate"
             [itineraryEndDate]="destination.end_date ? (destination.end_date | date:'yyyy-MM-dd') : ''"
@@ -121,28 +117,30 @@
             (maxDaysReached)="onMaxDaysReached(destination.destination_id)" (confirmedDates)="saveDates($event)"
             (reloadDestination)="reloadDestination($event)">
           </app-day-counter>
-          <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{
-              summary[destination.destination_id].accommodations_count }}</h1>
+
+          <button class="stat-button" (click)="goPlaces(destination.destination_id)">
+            <h1 class="stat-text">{{ summary[destination.destination_id].accommodations_count }}</h1>
           </button>
-          <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
-              summary[destination.destination_id].restaurants_count }}</h1>
+
+          <button class="stat-button" (click)="goPlaces(destination.destination_id)">
+            <h1 class="stat-text">{{ summary[destination.destination_id].restaurants_count }}</h1>
           </button>
-          <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
-              summary[destination.destination_id].activities_count }}</h1>
+
+          <button class="stat-button" (click)="goPlaces(destination.destination_id)">
+            <h1 class="stat-text">{{ summary[destination.destination_id].activities_count }}</h1>
           </button>
-          <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">{{
-            summary[destination.destination_id].total_expenses }}€</div>
+
+          <div class="expenses-pill small">
+            {{ summary[destination.destination_id].total_expenses }}€
+          </div>
         </div>
       </div>
-      <div class=" h-2 text-sm text-red-500" *ngIf="errorMessage">{{ errorMessage }}</div>
-      <div class=" mt-8 h-auto text-xl" *ngIf="destinations.length === 0">{{ValidatorMessages['destinationsNew']}}</div>
+      <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="no-destinations" *ngIf="destinations.length === 0">{{ValidatorMessages['destinationsNew']}}</div>
     </section>
 
     <!-- Map Section -->
-    <section class="map w-[35%]">
+    <section class="map-section">
       <app-map [zoom]="2" [center]="{ lat: 0, lng: 0 }"></app-map>
     </section>
   </div>

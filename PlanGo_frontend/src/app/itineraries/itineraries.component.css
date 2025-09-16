@@ -1,3 +1,171 @@
+@tailwind components;
+@tailwind utilities;
+
+:host {
+  display: block;
+}
+
+.itineraries-page {
+  @apply flex h-screen;
+}
+
+.itineraries-content {
+  @apply flex flex-grow;
+}
+
+.itineraries-list {
+  @apply flex-grow p-8 pt-5 flex flex-col;
+}
+
+.itineraries-header {
+  @apply sticky top-0 z-10 flex items-center justify-between pb-3 bg-white;
+  height: 5rem;
+}
+.header-left {
+  width: 30%;
+}
+.title {
+  @apply text-4xl font-bold text-gray-800;
+}
+.title-hr {
+  @apply border-black mt-4;
+  border-width: 1px;
+}
+
+.btn-add-itinerary {
+  @apply h-12 text-white px-4 py-2 rounded-full transition duration-300;
+  background-color: var(--primary-color);
+}
+.btn-add-itinerary:hover {
+  background-color: var(--secondary-color);
+}
+
+.empty-state {
+  @apply flex-grow;
+}
+.empty-text {
+  @apply text-xl pl-3 my-4;
+}
+
+.list-container {
+  @apply flex-grow overflow-y-auto mt-4;
+  max-height: calc(100vh - 8rem);
+}
+.list-item {
+  @apply my-3;
+}
+.itinerary-card {
+  @apply flex items-center justify-between p-6 rounded-3xl transition duration-300;
+  background-color: var(--primary-color);
+}
+.itinerary-card:hover {
+  background-color: var(--secondary-color);
+}
+.itinerary-name {
+  @apply text-lg text-white;
+  width: 30%;
+}
+.itinerary-dates {
+  @apply text-lg text-white text-center;
+  width: 40%;
+}
+.itinerary-info {
+  @apply flex items-center justify-end;
+  width: 30%;
+}
+.icon-pin {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.75rem;
+}
+.dest-count {
+  @apply text-lg text-white;
+}
+
+.map-section {
+  width: 35%;
+}
+
+/* Modal */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+.modal-content {
+  @apply bg-white p-8 rounded-2xl shadow-lg relative;
+  width: 50%;
+  max-width: 600px;
+}
+.modal-close {
+  @apply absolute top-4 right-4 text-gray-500 hover:text-gray-800;
+}
+
+.modal-header .modal-title {
+  @apply text-3xl font-bold text-gray-800;
+}
+.modal-hr {
+  @apply mt-4;
+  width: 60%;
+  border-width: 1px;
+}
+
+.form-root {
+  @apply mt-6;
+}
+.form-field {
+  @apply mb-6 h-20;
+}
+.label-text {
+  @apply block text-gray-700;
+}
+.input-text {
+  @apply w-full h-12 border p-2 rounded-full;
+}
+.select-countries {
+  @apply w-full h-12 border rounded-full bg-white text-black border-gray-800;
+}
+
+.date-row {
+  @apply flex justify-between items-center gap-4;
+}
+.date-field {
+  @apply relative w-1/2;
+}
+.calendar-full {
+  @apply w-full;
+}
+.calendar-input {
+  @apply w-full h-12 border p-2 rounded-full pr-10;
+}
+.calendar-panel {
+  @apply rounded-2xl shadow-lg;
+}
+.calendar-icon {
+  @apply absolute right-3 top-1/2;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.date-middle-icon {
+  @apply w-1/12 text-center flex justify-center;
+}
+
+.form-errors {
+  @apply h-2;
+}
+.error-text {
+  @apply text-red-500 text-sm;
+}
+
+.form-submit {
+  @apply flex justify-center mt-8;
+}
+.btn-submit {
+  @apply text-white w-3/5 h-14 px-4 py-2 rounded-full;
+  background-color: var(--primary-color);
+}
+.btn-submit:hover {
+  background-color: var(--secondary-color);
+}
 ::ng-deep ng-dropdown-panel {
     position: absolute;
     top: 100%;
