@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pg-participants-row {
+	@apply flex flex-row items-center mt-2;
+}
+.pg-add-btn {
+	@apply h-12 bg-primary text-white px-3 py-1 rounded-full hover:bg-secondary;
+}
+.pg-participants-col {
+	@apply flex flex-col h-20 items-end;
+}
+.pg-participant-form {
+	@apply flex flex-row items-center w-full;
+}
+.pg-participant-input {
+	@apply border h-12 px-6 rounded-full p-1 mr-2 flex-1;
+}
+.pg-participant-actions-wrap {
+	@apply flex flex-col justify-end w-auto;
+}
+.pg-participant-actions {
+	@apply flex flex-row h-12 items-center;
+}
+.pg-participant-save-btn {
+	@apply h-12 bg-primary text-white px-3 py-1 rounded-full hover:bg-secondary;
+}
+.pg-participant-cancel-btn {
+	@apply ml-2 text-gray-500;
+}
+.pg-error-text {
+	@apply text-red-500 text-sm mt-2;
+}

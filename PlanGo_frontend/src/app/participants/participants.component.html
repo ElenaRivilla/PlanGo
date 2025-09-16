@@ -1,34 +1,31 @@
-<div class="flex flex-row items-center mt-2">
+<div class="pg-participants-row">
   <ng-container *ngIf="!showInput">
-    <button type="button" (click)="showInput = true"
-      class="h-12 bg-[--primary-color] text-white px-3 py-1 rounded-full hover:bg-[--secondary-color]">
+    <button type="button" (click)="showInput = true" class="pg-add-btn">
       Añadir participante
     </button>
   </ng-container>
-  <div class="flex flex-col h-20 items-end">
-    <form *ngIf="showInput" (ngSubmit)="addParticipantWithDetails(participantName, destination ?? 0)"
-      class="flex flex-row items-center w-full">
+  <div class="pg-participants-col">
+    <form *ngIf="showInput" (ngSubmit)="addParticipantWithDetails(participantName, destination ?? 0)" class="pg-participant-form">
       <input type="text"
         [(ngModel)]="participantName"
         name="participantName"
         placeholder="Nombre del participante"
         required
-        class="border h-12 px-6 rounded-full p-1 mr-2 flex-1"
+        class="pg-participant-input"
         @slideInRight>
-      <div class="flex flex-col justify-end w-auto">
-        <div class="flex flex-row h-12 items-center">
-          <button type="submit"
-            class="h-12 bg-[--primary-color] text-white px-3 py-1 rounded-full hover:bg-[--secondary-color]">
+      <div class="pg-participant-actions-wrap">
+        <div class="pg-participant-actions">
+          <button type="submit" class="pg-participant-save-btn">
             Guardar
           </button>
-          <button type="button" (click)="cancelAdd()" class="ml-2 text-gray-500">Cancelar</button>
+          <button type="button" (click)="cancelAdd()" class="pg-participant-cancel-btn">Cancelar</button>
         </div>
       </div>
     </form>
-    <p *ngIf="participantExists()" class="text-red-500 text-sm mt-2">
+    <p *ngIf="participantExists()" class="pg-error-text">
       {{ ValidatorMessages['participantDuplicate'] }}
     </p>
-     <p *ngIf="formSubmitted && errorMessage === ValidatorMessages['participantEmpty']" class="text-red-500 text-sm mt-2">
+     <p *ngIf="formSubmitted && errorMessage === ValidatorMessages['participantEmpty']" class="pg-error-text">
       {{ ValidatorMessages['participantEmpty'] }}
     </p>
   </div>
