@@ -32,15 +32,15 @@
       </div>
 
       <!-- Expenses List -->
-      <div class="pg-expenses-list-wrap">
+        <div class="pg-expenses-list-wrap">
         <div *ngIf="expenses.length == 0">
-          <p class="text-xl pl-3 my-4">No hay gastos creados. ¡Añade el primero!</p>
+          <p class="pg-no-expenses-text">No hay gastos creados. ¡Añade el primero!</p>
         </div>
         <div *ngIf="expenses.length > 0">
           <ul>
-            <li *ngFor="let expense of expenses" class="my-3">
+            <li *ngFor="let expense of expenses" class="pg-list-item">
               <div class="pg-expense-item" (click)="onClickExpense(expense)">
-                <div class="pg-flex-col text-left">
+                <div class="pg-flex-col pg-text-left">
                   <h3 class="pg-expense-item-title">{{ expense.itinerary_name }} - {{ expense.city_name }}</h3>
                 </div>
                 <div class="pg-flex-end">
@@ -60,9 +60,9 @@
         <div class="pg-cluster">
           <div class="pg-flex-col">
             <div class="pg-flex-row">
-              <h1 class="text-xl font-bold">Nombre: </h1>
-              <span class="mx-2"></span>
-              <h1 class="text-xl font-normal pg-flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
+              <h1 class="pg-heading">Nombre: </h1>
+              <span class="pg-spacer"></span>
+              <h1 class="pg-heading-normal pg-flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
                 - {{ selectedExpense.Gasto.city_name }}</h1>
             </div>
           </div>
@@ -87,7 +87,7 @@
 
         <!-- Cluster 2 -->
         <div class="mt-8">
-          <h1 class="text-xl font-bold">Gastos individuales</h1>
+          <h1 class="pg-heading">Gastos individuales</h1>
           <hr class="pg-hr-75">
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
             <div class="pg-flex-between">
@@ -101,8 +101,8 @@
         </div>
 
         <!-- Cluster 3 -->
-        <div class="mt-8">
-          <h1 class="text-xl font-bold">Descripción</h1>
+          <div class="mt-8">
+          <h1 class="pg-heading">Descripción</h1>
           <hr class="pg-hr-75 mt-2 mb-2">
           <p class="pg-expense-description">
             {{ selectedExpense.Gasto.description }}
@@ -111,7 +111,7 @@
 
         <!-- Cluster 4 -->
         <div class="mt-8">
-          <h1 class="text-xl font-bold">Deuda</h1>
+          <h1 class="pg-heading">Deuda</h1>
           <hr class="pg-hr-75">
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
             <ng-container *ngIf="ue.user_name !== selectedExpense.Gasto.paid_by_name">
@@ -127,8 +127,8 @@
         </div>
       </div>
       <ng-template #noExpense>
-        <div class="flex items-center justify-center h-full">
-          <p class="text-center text-gray-500">Ningún gasto seleccionado</p>
+        <div class="pg-center-full">
+          <p class="pg-no-selected-text">Ningún gasto seleccionado</p>
         </div>
       </ng-template>
     </section>
@@ -147,12 +147,12 @@
 
     <div class="pg-modal-top-row">
       <div class="pg-w-70">
-        <h1 class="text-3xl font-bold text-gray-800">Nuevo gasto</h1>
+        <h1 class="pg-modal-title">Nuevo gasto</h1>
         <hr class="w-[60%] border-black border-[1px] mt-4">
       </div>
       <div class="pg-w-30 pg-flex-row">
         <button type="button"
-          class="pg-toggle-btn mr-4"
+          class="pg-toggle-btn pg-mr-4"
           (click)="setEqualitarian()"
           [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
           Equitativo</button>
@@ -166,10 +166,10 @@
     </div>
 
     <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
-      <div class="flex flex-row justify-between mb-10 mt-3 h-16">
+  <div class="pg-form-row">
         <!-- Itinerary -->
     <div class="pg-w-47">
-          <label for="itinerary" class="block text-gray-700">Itinerario *</label>
+      <label for="itinerary" class="pg-label">Itinerario *</label>
           <select id="itinerary" formControlName="itinerary" (change)="onItineraryChange()"
       class="pg-select-full" required>
             <option value="" disabled selected>Selecciona un itinerario</option>
@@ -182,7 +182,7 @@
         </div>
         <!-- Destination -->
         <div class="pg-w-47">
-          <label for="destination" class="block text-gray-700">Destino *</label>
+          <label for="destination" class="pg-label">Destino *</label>
           <select id="destination" formControlName="destination" (change)="onDestinationsChange()"
             class="pg-select-full" required>
             <option value="" disabled selected>Selecciona un destino</option>
@@ -195,9 +195,9 @@
         </div>
       </div>
 
-        <div class="h-28">
-        <label for="paidByUser" class="block text-gray-700">Pagado por el usuario *</label>
-        <div class="flex flex-row w-full items-center justify-between">
+  <div class="h-28">
+  <label for="paidByUser" class="pg-label">Pagado por el usuario *</label>
+  <div class="pg-row-between-full">
           <!-- Paid By -->
           <div class="pg-w-85">
             <select id="paidByUser" formControlName="payer" (change)="onPayerChange()"
@@ -215,11 +215,11 @@
         </div>
         <div class="flex flex-row justify-between">
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerRequired']"
-            class="text-red-500 text-sm mt-1">
+            class="pg-error-text">
             {{ validatorMessages['payerRequired'] }}
           </div>
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerAmountRequired']"
-            class="text-red-500 text-sm mt-1 ml-auto">
+            class="pg-error-text-right">
             {{ validatorMessages['payerAmountRequired'] }}
           </div>
         </div>
@@ -227,7 +227,7 @@
 
       <!-- Description -->
       <div class="mb-4">
-        <label for="description" class="block text-gray-700">Descripción</label>
+        <label for="description" class="pg-label">Descripción</label>
         <textarea id="description" formControlName="description" class="pg-textarea-large"
           placeholder="Escribe una descripción detallada sobre el gasto..."></textarea>
       </div>
@@ -235,7 +235,7 @@
       <!-- Debtors -->
       <div formArrayName="debtors" class="mb-4 h-64 overflow-y-auto">
         <div class="pg-debtors-header">
-          <label class="block text-gray-700">Deudores *</label>
+          <label class="pg-label">Deudores *</label>
           <!-- Parece que no funciona la primera condición value.payer-->
           <button type="button" (click)="addDebtor()"
             [disabled]="isAddDebtorDisabled()"
@@ -244,7 +244,7 @@
           </button>
         </div>
         <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-3 mt-3 h-16">
-          <div class="flex flex-row items-start">
+            <div class="pg-debtor-row">
             <div class="pg-flex-col pg-w-85">
               <select formControlName="id" class="pg-select-full" required>
                 <option value="" disabled selected>Selecciona deudor</option>
@@ -268,7 +268,7 @@
                 class="pg-debtor-amount-input"
                 required>
             </div>
-            <button type="button" (click)="removeDebtor(i)" class="ml-2 mt-2">
+            <button type="button" (click)="removeDebtor(i)" class="pg-ml-2-mt-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="red"
                 class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -276,16 +276,16 @@
             </button>
           </div>
         </div>
-        <div class="flex flex-row w-full justify-end">
+        <div class="pg-row-right-full">
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsExceedTotal']"
-            class="text-red-500 text-sm mt-1">
+            class="pg-error-text">
             {{ validatorMessages['debtorsExceedTotal'] }}
           </div>
         </div>
       </div>
 
       <!-- Submit Button -->
-      <div class="flex justify-center mt-6">
+      <div class="pg-submit-wrap">
         <button type="submit"
           class="pg-submit-btn">
           Crear gasto
