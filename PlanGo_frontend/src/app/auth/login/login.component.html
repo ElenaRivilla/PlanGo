@@ -1,63 +1,59 @@
-<div class="flex flex-row h-lvh">
-  <section class="bg-white w-[50%] h-full flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center w-full px-32">
-      <picture class="w-[300px] h-[150px]">
-        <source srcset="../assets/img/logo.png" media="(min-width: 1024px)" class="rounded">
-        <source srcset="../assets/img/logo.png" media="(min-width: 768px)" class="rounded">
-        <source srcset="../assets/img/logo.png" media="(max-width: 767px)" class="rounded">
-        <img src="../assets/img/logo.png" alt="Sample Image" class="rounded">
+<div class="pg-auth-viewport">
+  <section class="pg-auth-panel">
+    <div class="pg-auth-content">
+      <picture class="pg-logo">
+        <source srcset="../assets/img/logo.png" media="(min-width: 1024px)">
+        <source srcset="../assets/img/logo.png" media="(min-width: 768px)">
+        <source srcset="../assets/img/logo.png" media="(max-width: 767px)">
+        <img src="../assets/img/logo.png" alt="PlanGo logo">
       </picture>
-      <h1 class="my-6 text-l font-bold text-center">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.
-      </h1>
-      <form class="w-full" (ngSubmit)="login()">
-        <div class="mb-4 h-24">
-          <label>Email</label>
-          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required 
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-          <p *ngIf="errorMessageE" class="text-red-500 text-sm">{{ errorMessageE }}</p>
+      <h1 class="pg-heading">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.</h1>
+      <form class="pg-form" (ngSubmit)="login()">
+        <div class="pg-form-row">
+          <label class="pg-label">Email</label>
+          <input class="pg-input" type="email" [(ngModel)]="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+          <p *ngIf="errorMessageE" class="pg-error">{{ errorMessageE }}</p>
         </div>
-        <div class="mb-4 h-24">
-          <label class="my-2">Contraseña</label>
-          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password"
-            required>
-          <p *ngIf="errorMessageP" class="text-red-500 text-sm">{{ errorMessageP }}</p>
+        <div class="pg-form-row">
+          <label class="pg-label">Contraseña</label>
+          <div class="relative">
+            <input class="pg-input" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required>
+            <button type="button" class="pg-eye-button" (click)="toggleShowPassword()" aria-label="Mostrar contraseña">
+              <i class="pi" [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            </button>
+          </div>
+          <p *ngIf="errorMessageP" class="pg-error">{{ errorMessageP }}</p>
         </div>
-        <div class="mb-4 flex items-center justify-between">
-          <p *ngIf="errorMessageG" class="text-red-500 text-sm">{{ errorMessageG }}</p>
-          <label for="rememberMe" class="mr-3 ml-auto">Recordarme</label>
-          <input type="checkbox" id="rememberMe" class="mr-2 h-4 w-4">
+        <div class="pg-remember-row">
+          <p *ngIf="errorMessageG" class="pg-error">{{ errorMessageG }}</p>
+          <label for="rememberMe" class="pg-remember-label">Recordarme</label>
+          <input type="checkbox" id="rememberMe" class="pg-checkbox">
         </div>
-        <div class="separator flex items-center my-4">
-          <hr class="flex-grow border-black">
-          <span class="mx-6 text-black">o</span>
-          <hr class="flex-grow border-black">
+        <div class="pg-separator">
+          <hr class="pg-sep-line">
+          <span class="pg-sep-text">o</span>
+          <hr class="pg-sep-line">
         </div>
-        <div class="login-buttons flex items-center justify-center">
-          <button type="button" class=" login-google w-20 h-12 border bg-[--primary-color] hover:bg-[--secondary-color] rounded-full flex items-center justify-center m-4"
-            (click)="loginWithGoogle()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" class="w-6 h-6">
-              <path fill="#FFFFFF"
-                d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+        <div class="pg-socials">
+          <button type="button" class="pg-social pg-google" (click)="loginWithGoogle()">
+            <!-- Google icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" class="pg-social-icon">
+              <path fill="#FFFFFF" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
             </svg>
           </button>
-          <button
-            class=" login-microsoft w-20 h-12 border bg-[--primary-color] hover:bg-[--secondary-color] rounded-full flex items-center justify-center m-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6">
-              <path fill="#FFFFFF"
-                d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z" />
+          <button class="pg-social pg-microsoft">
+            <!-- Microsoft icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="pg-social-icon">
+              <path fill="#FFFFFF" d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z" />
             </svg>
           </button>
         </div>
-        <button class="border bg-[--primary-color] hover:bg-[--secondary-color] text-white py-2 px-4 rounded-full w-full">Iniciar sesión</button>
+        <button class="pg-btn-primary">Iniciar sesión</button>
       </form>
-      <p class="my-2">No tienes cuenta? 
-        <strong>
-          <button class="text-[--primary-color] hover:text-[--secondary-color]" (click)="navigateToRegister()">Regístrate</button>
-        </strong>
-      </p>
+      <p class="pg-alt-text">No tienes cuenta? <strong><button class="pg-link-btn" (click)="navigateToRegister()">Regístrate</button></strong></p>
     </div>
   </section>
-  <section id="background" class="w-[50%] h-full relative overflow-hidden">
+  <section id="background" class="pg-bg-panel">
     <app-animated-background></app-animated-background>
   </section>
 </div>

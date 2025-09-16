@@ -22,6 +22,7 @@ export class LoginComponent {
   errorMessageG = '';
   email = '';
   password = '';
+  showPassword = false;
 
   constructor(
     private auth: Auth,
@@ -95,5 +96,9 @@ export class LoginComponent {
 
   navigateToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }
