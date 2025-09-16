@@ -238,7 +238,6 @@
   @apply bg-primary text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-secondary;
 }
 
-/* Additional helpers to replace remaining inline utilities in the template */
 .pg-no-expenses-text {
   @apply text-xl pl-3 my-4;
 }
