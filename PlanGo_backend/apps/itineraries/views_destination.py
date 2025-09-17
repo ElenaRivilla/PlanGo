@@ -69,17 +69,15 @@ def create_destination(request):
 def update_destination(request, destination_id):
     try:
         destination = Destination.objects.get(pk=destination_id)
+        
     except Destination.DoesNotExist:
         return Response({'error': 'Destination not found'}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = DestinationSerializer(destination, data=request.data, partial=True)
-    
-    if serializer.is_valid():
-        destination = serializer.save()
-        destination_data = map_destinations([destination])[0]
-        return Response(destination_data, status=status.HTTP_200_OK)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
+    destination = serializer.save()
+    destination_data = map_destinations([destination])[0]
+    return Response(destination_data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
