@@ -1,0 +1,311 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.pg-expenses-root {
+  @apply flex h-screen;
+}
+
+.pg-expenses-main {
+  @apply flex flex-grow;
+}
+
+.pg-expenses-section {
+  @apply flex-grow p-8 pt-5 flex flex-col;
+}
+
+.pg-expenses-sticky {
+  @apply sticky top-0 bg-white z-10 pb-3;
+}
+
+.pg-expenses-header-row {
+  @apply flex flex-row h-20 justify-between items-center;
+}
+
+.pg-expenses-left {
+  @apply w-[30%];
+}
+
+.pg-expenses-title {
+  @apply text-4xl font-bold text-gray-800;
+}
+
+.pg-hr {
+  @apply border-black border-[1px] mt-4;
+}
+
+.pg-expenses-add-btn {
+  @apply h-12 bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-300;
+}
+
+.pg-error-small {
+  @apply text-red-500 text-sm mt-1;
+}
+
+.pg-expenses-totals-row {
+  @apply flex flex-row items-center justify-between w-full mt-4;
+}
+
+.pg-expenses-subtitle {
+  @apply text-xl font-bold text-gray-800;
+}
+
+.pg-expenses-total-badge {
+  @apply h-12 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
+}
+
+
+.pg-expenses-list-wrap {
+  @apply flex-grow overflow-y-auto mt-4;
+}
+
+.pg-expense-item {
+  @apply flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-primary hover:bg-secondary transition duration-300 justify-between cursor-pointer;
+}
+
+.pg-expense-item-title {
+  @apply text-lg text-white;
+}
+
+.pg-expense-amount {
+  @apply text-white;
+}
+
+.pg-expense-details-section {
+  @apply p-8 border-l-2 border-gray-300 w-[35%] h-screen overflow-y-auto;
+}
+
+.pg-row-between {
+  @apply my-4 flex flex-row justify-between items-center;
+}
+
+.pg-hr-full {
+  @apply w-full border-black border-[1px] mt-2;
+}
+
+.pg-hr-75 {
+  @apply w-[75%] border-black border-[1px] mt-2;
+}
+
+.pg-text-md {
+  @apply text-base;
+}
+
+.pg-modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.pg-modal-container {
+  @apply bg-white p-8 rounded-2xl shadow-lg w-[55%] h-auto relative;
+}
+
+.pg-modal-close {
+  @apply absolute top-4 right-4 text-gray-500 hover:text-gray-800;
+}
+
+.pg-modal-top-row {
+  @apply flex flex-row justify-between items-center;
+}
+
+.pg-toggle-btn {
+  @apply h-12 w-full bg-primary hover:bg-secondary rounded-full text-white;
+}
+
+.pg-select-full {
+  @apply w-full h-12 border p-2 rounded-full border-gray-700;
+}
+
+.pg-total-amount-input {
+  @apply w-full h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white appearance-none no-spinner;
+}
+
+.pg-textarea-large {
+  @apply w-full h-24 border p-2 rounded-lg border-gray-700;
+}
+
+.pg-flex-col {
+  @apply flex flex-col;
+}
+
+.pg-flex-row {
+  @apply flex flex-row;
+}
+
+.pg-flex-between {
+  @apply flex flex-row justify-between items-center;
+}
+
+.pg-flex-end {
+  @apply flex items-center justify-end;
+}
+
+.pg-w-70 {
+  @apply w-[70%];
+}
+
+.pg-w-30 {
+  @apply w-[30%];
+}
+
+.pg-w-47 {
+  @apply w-[47%];
+}
+
+.pg-w-85 {
+  @apply w-[85%];
+}
+
+.pg-w-10 {
+  @apply w-[10%];
+}
+
+.pg-w-20 {
+  @apply w-20;
+}
+
+.pg-empty-center {
+  @apply flex items-center justify-center h-full;
+}
+
+.pg-debtor-amount-wrap {
+  @apply flex flex-col items-center ml-4;
+}
+
+.pg-cluster {
+  @apply mb-8 flex flex-col items-center justify-between;
+}
+
+.pg-expense-type-badge {
+  @apply rounded-full mt-6 bg-primary h-12 text-center text-white font-bold flex px-4 items-center;
+}
+
+.pg-badge {
+  @apply h-10 bg-primary text-white px-4 py-2 rounded-full flex items-center justify-center;
+}
+
+.pg-expense-description {
+  @apply w-full h-32 px-4 py-2 rounded-2xl border border-gray-300 resize-y whitespace-pre-line;
+}
+
+.pg-debtors-wrap {
+  @apply mb-4 h-64 overflow-y-auto border-gray-700;
+}
+
+.pg-debtors-header {
+  @apply flex flex-row items-center justify-between sticky top-0 bg-white z-10 p-2;
+}
+
+.pg-add-debtor-btn {
+  @apply bg-primary hover:bg-secondary text-white px-4 py-2 rounded-full;
+}
+
+.pg-debtor-item {
+  @apply mb-3 mt-3 h-16;
+}
+
+.pg-debtor-row {
+  @apply flex flex-row items-start;
+}
+
+.pg-debtor-select-wrap {
+  @apply flex flex-col w-[85%];
+}
+
+.pg-select {
+  @apply h-12 border p-2 rounded-full border-gray-700;
+}
+
+.pg-debtor-amount-input {
+  @apply w-20 h-12 border p-2 rounded-full bg-primary text-white text-center placeholder-white no-spinner;
+}
+
+.pg-remove-icon {
+  @apply w-6 h-6;
+}
+
+.pg-submit-btn {
+  @apply bg-primary text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-secondary;
+}
+
+.pg-no-expenses-text {
+  @apply text-xl pl-3 my-4;
+}
+
+.pg-list-item {
+  @apply my-3;
+}
+
+.pg-text-left {
+  @apply text-left;
+}
+
+.pg-heading {
+  @apply text-xl font-bold;
+}
+
+.pg-heading-normal {
+  @apply text-xl font-normal;
+}
+
+.pg-spacer {
+  @apply mx-2;
+}
+
+.pg-center-full {
+  @apply flex items-center justify-center h-full;
+}
+
+.pg-no-selected-text {
+  @apply text-center text-gray-500;
+}
+
+.pg-modal-title {
+  @apply text-3xl font-bold text-gray-800;
+}
+
+.pg-mr-4 {
+  @apply mr-4;
+}
+
+.pg-ml-2-mt-2 {
+  @apply ml-2 mt-2;
+}
+
+.pg-form-row {
+  @apply flex flex-row justify-between mb-10 mt-3 h-16;
+}
+
+.pg-label {
+  @apply block text-gray-700;
+}
+
+.pg-row-between-full {
+  @apply flex flex-row w-full items-center justify-between;
+}
+
+.pg-error-text {
+  @apply text-red-500 text-sm mt-1;
+}
+
+.pg-error-text-right {
+  @apply text-red-500 text-sm mt-1 ml-auto;
+}
+
+.pg-row-right-full {
+  @apply flex flex-row w-full justify-end;
+}
+
+.pg-submit-wrap {
+  @apply flex justify-center mt-6;
+}

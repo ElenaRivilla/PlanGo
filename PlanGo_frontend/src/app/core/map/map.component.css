@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:host {
+  display: block;
+  height: 100vh !important;
+  width: 100% !important;
+}
+
+::ng-deep .map-container {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-height: none !important;
+  max-width: none !important;
+}
+
+.pg-map-info {
+  @apply p-2 max-w-[320px] w-full bg-white shadow-xl;
+}
+.pg-map-title-row {
+  @apply flex justify-between items-center;
+}
+.pg-map-title {
+  @apply font-bold text-lg;
+}
+.pg-map-info-actions {
+  @apply text-sm flex items-center gap-1;
+}
+.pg-map-info-icon {
+  @apply size-6;
+}
+.pg-map-address {
+  @apply text-gray-600 text-sm mb-2 w-[80%];
+}
+.pg-map-rating {
+  @apply flex justify-end ml-2 flex-grow items-center;
+}
+.pg-map-star {
+  @apply w-4 h-4 text-yellow-400;
+}
+.pg-map-rating-value {
+  @apply text-base;
+}
+.pg-map-carousel {
+  @apply w-full h-40 bg-gray-200 rounded flex items-center justify-center mb-2 relative;
+}
+.pg-map-photo-btn {
+  @apply absolute top-1/2 -translate-y-1/2 bg-white text-lg bg-opacity-70 rounded-full p-1;
+}
+.pg-map-photo-btn-left {
+  @apply left-2;
+}
+.pg-map-photo-btn-right {
+  @apply right-2;
+}
+.pg-map-photo-img {
+  @apply w-full h-40 object-cover rounded;
+}
+.pg-map-dots {
+  @apply absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1;
+}
+.pg-map-dot {
+  @apply w-2 h-2 rounded-full;
+}
+.pg-map-placeholder-svg {
+  @apply w-16 h-16 text-gray-400;
+}

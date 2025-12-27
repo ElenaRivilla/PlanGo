@@ -1,0 +1,105 @@
+<div class="pg-saved-root">
+    <!-- Sidebar -->
+    <app-header></app-header>
+
+    <!-- Main Content -->
+    <div class="pg-saved-main">
+        <!-- Places Section -->
+        <section class="pg-saved-section">
+            <!-- Sticky Header -->
+            <div class="pg-itineraries-header">
+                <div class="pg-saved-left">
+                    <h1 class="pg-saved-title">Lugares guardados</h1>
+                    <hr class="pg-hr">
+                </div>
+            </div>
+
+            <!-- Accordion Sections -->
+            <div class="pg-accordion">
+                <div *ngFor="let section of sections; let i = index" class="pg-accordion-item">
+                    <!-- Botón para abrir/cerrar la sección -->
+                    <button class="pg-accordion-header" (click)="toggleSection(i)">
+                        <span class="pg-acc-left">
+                            <span class="pg-acc-icon-wrapper" [innerHTML]="svgIcons[i]"></span>
+                            <span class="pg-acc-title">{{ section.title }}</span>
+                        </span>
+                        <div class="flex flex-row justify-end items-center">
+                            <span class="transition-transform duration-300" [class.rotate-90]="section.isOpen">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="white" class="pg-acc-icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                    <!-- Contenido de la sección -->
+                    <div class="pg-accordion-content" [class.max-h-0]="!section.isOpen" [style.maxHeight]="section.isOpen ? '44vh' : '0px'">
+                        <!-- Alojamientos -->
+                        <ng-container *ngIf="section.title === 'Alojamientos'">
+                            <div *ngIf="section.isOpen">
+                                <div *ngIf="accommodations && accommodations.length > 0" class="pg-cards-grid"
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
+                                    <!-- ...cards... -->
+                                    <div *ngFor="let acc of accommodations" class="pg-card" (click)="onPlaceSelect(acc)">
+                                        <!-- ...contenido de la card... -->
+                                        <img *ngIf="acc.images?.length" [src]="getPhotoUrl(acc.images[acc.activePhotoIndex || 0])"
+                                            alt="{{ acc.accommodation }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ acc.name }}</div>
+                                        <div class="pg-card-subtitle">{{ acc.address }}</div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!accommodations || accommodations.length === 0" class="pg-no-items">
+                                    No hay alojamientos guardadas.
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- Comer y beber -->
+                        <ng-container *ngIf="section.title === 'Comer y beber'">
+                            <div *ngIf="section.isOpen">
+                                <div *ngIf="restaurants && restaurants.length > 0" class="pg-cards-grid"
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
+                                    <!-- ...cards... -->
+                                    <div *ngFor="let rest of restaurants" class="pg-card" (click)="onPlaceSelect(rest)">
+                                        <img *ngIf="rest.images?.length" [src]="getPhotoUrl(rest.images[rest.activePhotoIndex || 0])"
+                                            alt="{{ rest.restaurant }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ rest.name }}</div>
+                                        <div class="pg-card-subtitle">{{ rest.address }}</div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!restaurants || restaurants.length === 0" class="pg-no-items">
+                                    No hay restaurantes guardadas.
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- Cosas que hacer -->
+                        <ng-container *ngIf="section.title === 'Cosas que hacer'">
+                            <div *ngIf="section.isOpen">
+                                <div *ngIf="activities && activities.length > 0" class="pg-cards-grid"
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
+                                    <!-- ...cards... -->
+                                    <div *ngFor="let act of activities" class="pg-card" (click)="onPlaceSelect(act)">
+                                        <img *ngIf="act.images?.length" [src]="getPhotoUrl(act.images[act.activePhotoIndex || 0])"
+                                            alt="{{ act.activity }}" class="pg-card-img" />
+                                        <div class="pg-card-title">{{ act.name }}</div>
+                                        <div class="pg-card-subtitle">{{ act.address }}</div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!activities || activities.length === 0" class="pg-no-items">
+                                    No hay actividades guardadas.
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="pg-map-section">
+            <app-map #mapRef [center]="mapLocation" [zoom]="13" [markers]="markers" [selectedPlace]="selectedPlace"
+                [selectedPlaceImages]="selectedPlaceImages">
+            </app-map>
+        </section>
+    </div>
+</div>

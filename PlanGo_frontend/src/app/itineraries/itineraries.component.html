@@ -1,0 +1,144 @@
+<div class="itineraries-page">
+  <app-header></app-header>
+  <p-toast></p-toast>
+  <div class="itineraries-content">
+    <section class="itineraries-list">
+      <!-- Sticky Header -->
+      <div class="itineraries-header">
+        <div class="header-left">
+          <h1 class="title">Itinerarios</h1>
+          <hr class="title-hr">
+        </div>
+        <button (click)="toggleForm()" class="btn-add-itinerary">Añadir itinerario</button>
+      </div>
+
+      <div *ngIf="itineraries.length == 0" class="empty-state">
+        <p class="empty-text">No hay itinerarios creados. ¡Añade el primero!</p>
+      </div>
+
+      <div *ngIf="itineraries.length > 0" class="list-container">
+        <ul>
+          <li *ngFor="let itinerary of itineraries" class="list-item">
+            <div *ngIf="itinerary.itinerary_id !== undefined" class="itinerary-card" (click)="goToDestinations(itinerary.itinerary_id!)" style="cursor:pointer;">
+              <h3 class="itinerary-name">{{ itinerary.itinerary_name }}</h3>
+              <time class="itinerary-dates" [attr.datetime]="itinerary.start_date">
+                {{ itinerary.start_date | date:'dd/MM/yyyy':'es-ES' }} - {{ itinerary.end_date | date:'dd/MM/yyyy':'es-ES' }}
+              </time>
+              <div class="itinerary-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="icon-pin" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <p *ngIf="(''+(itinerary?.destinations_count || '')).trim() === '1'" class="dest-count">{{ itinerary.destinations_count || 0 }} destino</p>
+                <p *ngIf="(''+(itinerary?.destinations_count || '')).trim() !== '1'" class="dest-count">{{ itinerary.destinations_count || 0 }} destinos</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="map-section">
+      <app-map [zoom]="2" [center]="{ lat: 0, lng: 0 }"></app-map>
+    </section>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="showForm" class="modal-overlay">
+  <div class="modal-content">
+    <button (click)="toggleForm()" class="modal-close">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="modal-header">
+      <h1 class="modal-title">Nuevo itinerario</h1>
+      <hr class="modal-hr">
+    </div>
+    <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="form-root">
+      <div class="form-field">
+        <label for="itineraryName" class="label-text">Nombre del itinerario</label>
+        <input id="itineraryName" formControlName="itineraryName" type="text" class="input-text" required>
+        <p *ngIf="itineraryForm.get('itineraryName')?.invalid && itineraryForm.get('itineraryName')?.touched" class="error-text">
+          Añade un nombre al itinerario
+        </p>
+      </div>
+
+      <div class="form-field">
+        <label for="countries" class="label-text">Países a visitar</label>
+        <div class="relative">
+          <ng-select 
+            [items]="allCountries" 
+            bindLabel="name" 
+            bindValue="name" 
+            formControlName="countries" 
+            [multiple]="true" 
+            class="select-countries">
+          </ng-select>
+        </div>
+        <p *ngIf="itineraryForm.get('countries')?.invalid && itineraryForm.get('countries')?.touched" class="error-text">
+          Selecciona al menos un país
+        </p>
+      </div>
+
+      <div class="date-row">
+        <!-- Calendario de inicio -->
+        <div class="date-field">
+          <p-calendar 
+            id="startDate"
+            formControlName="startDate"
+            dateFormat="dd-MM-yy"
+            [minDate]="currentDate"
+            class="calendar-full"
+            inputStyleClass="calendar-input"
+            panelClass="calendar-panel"
+          ></p-calendar>
+          <span class="calendar-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 8h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
+            </svg>
+          </span>
+        </div>
+        
+        <!-- Icono central -->
+        <div class="date-middle-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mx-auto">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+          </svg>
+        </div>
+        
+        <!-- Calendario de fin -->
+        <div class="date-field">
+          <p-calendar 
+            id="endDate"
+            formControlName="endDate"
+            dateFormat="dd-MM-yy"
+            [minDate]="currentDate"
+            class="calendar-full"
+            inputStyleClass="calendar-input"
+            panelClass="calendar-panel"
+          ></p-calendar>
+          <span class="calendar-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="w-6 h-6 text-black">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 8h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-errors">
+        <p *ngIf="itineraryForm.errors?.['endDateBeforeStartDate'] && (itineraryForm.get('endDate')?.touched || formSubmitted)" class="error-text">
+          {{ ValidatorMessages['itineraryendDateAfterstartDate'] }}
+        </p>
+        <p *ngIf="formSubmitted && (itineraryForm.get('startDate')?.invalid || itineraryForm.get('endDate')?.invalid)" class="error-text">
+          {{ ValidatorMessages['itineraryDatesRequired'] }}
+        </p>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit" class="btn-submit">Crear itinerario</button>
+      </div>
+    </form>
+  </div>
+</div>

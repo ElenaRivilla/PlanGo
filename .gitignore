@@ -3,6 +3,12 @@
 
 # Ignorar archivos compilados de Python
 *.pyc
+.env
+
+# Archivos del proyecto PlanGo_backend
+PlanGo_backend/config/firebase-credentials.json
+database-api
+PlanGo_backend/db.sqlite3
 
 # Node.js y Frontend dentro de la carpeta PlanGo_frontend
 PlanGo_frontend/node_modules/
@@ -31,6 +37,7 @@ PlanGo_frontend/.classpath
 PlanGo_frontend/*.launch
 PlanGo_frontend.settings/
 PlanGo_frontend/.sublime-workspace
+PlanGo_frontend/src/environments
 
 # Visual Studio Code
 PlanGo_frontend/.vscode/*

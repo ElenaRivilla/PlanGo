@@ -1,0 +1,59 @@
+<div class="pg-auth-viewport">
+  <section id="background" class="pg-bg-panel">
+    <app-animated-background></app-animated-background>
+  </section>
+  <section class="pg-auth-panel">
+    <div class="pg-auth-content">
+      <picture class="pg-logo">
+        <source srcset="../assets/img/logo.png" media="(min-width: 1024px)">
+        <source srcset="../assets/img/logo.png" media="(min-width: 768px)">
+        <source srcset="../assets/img/logo.png" media="(max-width: 767px)">
+        <img src="../assets/img/logo.png" alt="PlanGo logo">
+      </picture>
+      <h1 class="pg-heading">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.</h1>
+      <form class="pg-form" (ngSubmit)="register()">
+        <div class="pg-form-row">
+          <label class="pg-label">Email</label>
+          <input class="pg-input" type="email" [(ngModel)]="email" name="email" (ngModelChange)="clearError('email')" required>
+          <p *ngIf="errorMessageE" class="pg-error">{{ errorMessageE }}</p>
+        </div>
+        <div class="pg-form-row pg-row-split">
+          <div class="pg-col">
+            <label class="pg-label">Nombre</label>
+            <input class="pg-input" type="text" [(ngModel)]="firstName" name="firstName" (ngModelChange)="clearError('firstName')" required>
+            <p *ngIf="errorMessageN" class="pg-error">{{ errorMessageN }}</p>
+          </div>
+          <div class="pg-col">
+            <label class="pg-label">Apellido</label>
+            <input class="pg-input" type="text" [(ngModel)]="lastName" name="lastName" (ngModelChange)="clearError('lastName')" required>
+            <p *ngIf="errorMessageLN" class="pg-error">{{ errorMessageLN }}</p>
+          </div>
+        </div>
+        <div class="pg-form-row pg-row-split">
+          <div class="pg-col">
+            <label class="pg-label">Contraseña</label>
+            <div class="relative">
+              <input class="pg-input" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" (ngModelChange)="clearError('password')" required>
+              <button type="button" class="pg-eye-button" (click)="toggleShowPassword()" aria-label="Mostrar contraseña">
+                <i class="pi" [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+              </button>
+            </div>
+            <p *ngIf="errorMessageP" class="pg-error">{{ errorMessageP }}</p>
+          </div>
+          <div class="pg-col">
+            <label class="pg-label">Repetir contraseña</label>
+            <div class="relative">
+              <input class="pg-input" [type]="showRepeatPassword ? 'text' : 'password'" [(ngModel)]="repeatPassword" name="repeat-password" (ngModelChange)="clearError('repeat-password')" required>
+              <button type="button" class="pg-eye-button" (click)="toggleShowRepeatPassword()" aria-label="Mostrar repetir contraseña">
+                <i class="pi" [ngClass]="showRepeatPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+              </button>
+            </div>
+            <p *ngIf="errorMessageRP" class="pg-error">{{ errorMessageRP }}</p>
+          </div>
+        </div>
+        <button class="pg-btn-primary">Registrarse</button>
+      </form>
+      <p class="pg-alt-text">Ya tienes cuenta? <strong><button class="pg-link-btn" (click)="navigateToLogin()">Inicia sesión</button></strong></p>
+    </div>
+  </section>
+</div>

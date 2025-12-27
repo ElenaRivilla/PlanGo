@@ -1,1 +1,135 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
+@import url('https://unpkg.com/primeicons@6.1.0/primeicons.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1, h3 {
+  font-family: 'Lato', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+}
+
+.pg-auth-viewport {
+  @apply flex flex-row h-lvh;
+}
+
+.pg-auth-panel {
+  @apply bg-white w-1/2 h-full flex items-center justify-center;
+}
+
+.pg-bg-panel {
+  @apply w-1/2 h-full relative overflow-hidden;
+}
+
+.pg-auth-content {
+  @apply flex flex-col items-center justify-center w-full px-8 lg:px-32;
+}
+
+.pg-logo {
+  @apply w-[350px] h-[150px];
+}
+
+.pg-heading {
+  @apply my-6 text-lg font-bold text-center;
+}
+
+.pg-form {
+  @apply w-full;
+}
+
+.pg-form-row {
+  @apply mb-4 h-24;
+}
+
+.pg-label {
+  @apply block text-gray-700;
+}
+
+.pg-input {
+  @apply mt-2 w-full h-12 border p-2 rounded-full flex items-center justify-center;
+}
+
+input.pg-input,
+textarea.pg-input,
+select.pg-input {
+  @apply mt-2 w-full h-12 border p-2 rounded-full pr-10; /* espacio para el botón ojo */
+  box-sizing: border-box;
+  border-width: 1px;
+  border-color: rgba(0,0,0,0.8);
+}
+
+input.pg-input:focus,
+textarea.pg-input:focus,
+select.pg-input:focus {
+  @apply outline-none;
+  box-shadow: 0 0 0 4px rgba(76,67,206,0.12);
+  border-color: rgba(76,67,206,0.8);
+}
+
+.pg-error {
+  @apply text-red-500 text-sm;
+}
+
+.pg-remember-row {
+  @apply flex items-center justify-between;
+}
+
+.pg-remember-label {
+  @apply mr-3 ml-auto;
+}
+
+.pg-checkbox {
+  @apply mr-2 h-4 w-4;
+}
+
+.pg-separator {
+  @apply flex items-center my-4;
+}
+.pg-sep-line {
+  @apply flex-grow border-black;
+}
+.pg-sep-text {
+  @apply mx-6 text-black;
+}
+
+.pg-socials {
+  @apply flex items-center justify-center;
+}
+.pg-social {
+  @apply w-20 h-12 border bg-primary hover:bg-secondary rounded-full flex items-center justify-center m-4;
+}
+.pg-social-icon {
+  @apply w-6 h-6;
+}
+
+.pg-btn-primary {
+  @apply border bg-primary hover:bg-secondary text-white py-4 px-4 rounded-full w-full;
+}
+
+.pg-alt-text {
+  @apply my-2;
+}
+.pg-link-btn {
+  @apply text-primary hover:text-secondary;
+  background: transparent;
+  border: none;
+}
+
+.pg-row-split {
+  @apply flex gap-4;
+}
+.pg-col {
+  @apply mb-4 flex-1 h-24 min-w-0;
+}
+
+.pg-eye-button {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-0 bg-transparent border-none text-gray-600 w-8 h-8;
+}
+
+.pg-eye-button .pi {
+  @apply text-lg leading-none;
+}

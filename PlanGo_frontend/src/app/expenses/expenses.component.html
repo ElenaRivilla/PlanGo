@@ -1,0 +1,296 @@
+<div class="pg-expenses-root">
+  <!-- Sidebar -->
+  <app-header></app-header>
+  <p-toast></p-toast>
+  <!-- Main Content -->
+  <div class="pg-expenses-main">
+    <!-- Expenses Section -->
+     
+    <section class="pg-expenses-section">
+      <!-- Header -->
+      <div class="pg-expenses-sticky">
+        <div class="pg-expenses-header-row">
+          <div class="pg-expenses-left">
+            <h1 class="pg-expenses-title">Gastos</h1>
+            <hr class="pg-hr">
+          </div>
+          <button (click)="toggleForm()" class="pg-expenses-add-btn">
+            Añadir gasto
+          </button>
+          <div *ngIf="formSubmitted && expenseForm.errors?.['addDebtorRequiresPayer']"
+            class="pg-error-small">
+            {{ validatorMessages['addDebtorRequiresPayer'] }}
+          </div>
+        </div>
+        <div class="pg-expenses-totals-row">
+          <h3 class="pg-expenses-subtitle">Gastos Totales</h3>
+          <div *ngIf="expenses.length > 0" class="pg-expenses-total-badge">
+            {{ getTotalExpenses() | number:'1.2-2' }}€
+          </div>
+        </div>
+        <hr class="pg-hr-full">
+      </div>
+
+      <!-- Expenses List -->
+        <div class="pg-expenses-list-wrap">
+        <div *ngIf="expenses.length == 0">
+          <p class="pg-no-expenses-text">No hay gastos creados. ¡Añade el primero!</p>
+        </div>
+        <div *ngIf="expenses.length > 0">
+          <ul>
+            <li *ngFor="let expense of expenses" class="pg-list-item">
+              <div class="pg-expense-item" (click)="onClickExpense(expense)">
+                <div class="pg-flex-col pg-text-left">
+                  <h3 class="pg-expense-item-title">{{ expense.itinerary_name }} - {{ expense.city_name }}</h3>
+                </div>
+                <div class="pg-flex-end">
+                  <p class="pg-expense-amount">{{ expense.total_amount | number:'1.2-2' }}€</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expense Details Section -->
+    <section class="pg-expense-details-section">
+      <div *ngIf="selectedExpense; else noExpense">
+        <!-- Cluster 1 -->
+        <div class="pg-cluster">
+          <div class="pg-flex-col">
+            <div class="pg-flex-row">
+              <h1 class="pg-heading">Nombre: </h1>
+              <span class="pg-spacer"></span>
+              <h1 class="pg-heading-normal pg-flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
+                - {{ selectedExpense.Gasto.city_name }}</h1>
+            </div>
+          </div>
+          <div class="pg-expense-type-badge">
+            Tipo: {{ selectedExpense.Gasto.type_expense === 'Equalitarian' ? 'Equitativo' : 'Personalizado' }}
+          </div>
+        </div>
+          <div class="pg-row-between">
+          <h2 class="pg-text-md">Costes totales:</h2>
+          <div class="pg-badge">
+            {{ selectedExpense.Gasto.total_amount }}€
+          </div>
+        </div>
+        <hr class="pg-hr-full">
+          <div class="pg-row-between">
+          <h2 class="pg-text-md">Pagado por:</h2>
+          <div class="pg-badge">
+            {{ selectedExpense.Gasto.paid_by_name || 'Usuario' }}
+          </div>
+        </div>
+        <hr class="pg-hr-full mt-4">
+
+        <!-- Cluster 2 -->
+        <div class="mt-8">
+          <h1 class="pg-heading">Gastos individuales</h1>
+          <hr class="pg-hr-75">
+          <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
+            <div class="pg-flex-between">
+                <h2 class="pg-text-md">{{ ue.user_name || 'Usuario' }}:</h2>
+              <div class="pg-badge">
+                {{ ue.expected_share }}€
+              </div>
+            </div>
+            <hr class="w-full border-black border-[1px] mt-4">
+          </div>
+        </div>
+
+        <!-- Cluster 3 -->
+          <div class="mt-8">
+          <h1 class="pg-heading">Descripción</h1>
+          <hr class="pg-hr-75 mt-2 mb-2">
+          <p class="pg-expense-description">
+            {{ selectedExpense.Gasto.description }}
+          </p>
+        </div>
+
+        <!-- Cluster 4 -->
+        <div class="mt-8">
+          <h1 class="pg-heading">Deuda</h1>
+          <hr class="pg-hr-75">
+          <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
+            <ng-container *ngIf="ue.user_name !== selectedExpense.Gasto.paid_by_name">
+              <div class="pg-flex-between">
+                  <h2 class="pg-text-md">{{ ue.user_name || 'Usuario' }}:</h2>
+                <div class="pg-badge">
+                  {{ ue.expected_share }}€
+                </div>
+              </div>
+              <hr class="w-full border-black border-[1px] mt-4">
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-template #noExpense>
+        <div class="pg-center-full">
+          <p class="pg-no-selected-text">Ningún gasto seleccionado</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="showForm" class="pg-modal-overlay">
+  <div class="pg-modal-container">
+    <button (click)="toggleForm()" class="pg-modal-close">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="pg-modal-top-row">
+      <div class="pg-w-70">
+        <h1 class="pg-modal-title">Nuevo gasto</h1>
+        <hr class="w-[60%] border-black border-[1px] mt-4">
+      </div>
+      <div class="pg-w-30 pg-flex-row">
+        <button type="button"
+          class="pg-toggle-btn pg-mr-4"
+          (click)="setEqualitarian()"
+          [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
+          Equitativo</button>
+        <button type="button"
+          class="pg-toggle-btn"
+          (click)="setPersonalized()"
+          [ngClass]="{'bg-primary text-white': expenseForm.value.type_expense === 'Personalized', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Personalized'}">
+          Personalizado
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
+  <div class="pg-form-row">
+        <!-- Itinerary -->
+    <div class="pg-w-47">
+      <label for="itinerary" class="pg-label">Itinerario *</label>
+          <select id="itinerary" formControlName="itinerary" (change)="onItineraryChange()"
+      class="pg-select-full" required>
+            <option value="" disabled selected>Selecciona un itinerario</option>
+            <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
+          </select>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['itineraryRequired']"
+            class="text-red-500 text-sm mt-1">
+            {{ validatorMessages['itineraryRequired'] }}
+          </div>
+        </div>
+        <!-- Destination -->
+        <div class="pg-w-47">
+          <label for="destination" class="pg-label">Destino *</label>
+          <select id="destination" formControlName="destination" (change)="onDestinationsChange()"
+            class="pg-select-full" required>
+            <option value="" disabled selected>Selecciona un destino</option>
+            <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
+          </select>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['destinationRequired']"
+            class="text-red-500 text-sm mt-1">
+            {{ validatorMessages['destinationRequired'] }}
+          </div>
+        </div>
+      </div>
+
+  <div class="h-28">
+  <label for="paidByUser" class="pg-label">Pagado por el usuario *</label>
+  <div class="pg-row-between-full">
+          <!-- Paid By -->
+          <div class="pg-w-85">
+            <select id="paidByUser" formControlName="payer" (change)="onPayerChange()"
+              class="pg-select-full" required>
+              <option value="" disabled selected>Selecciona un pagador</option>
+              <option *ngFor="let p of participants" [value]="p.participant_id">{{ p.participant_name }}</option>
+            </select>
+          </div>
+          <!-- Total Amount -->
+          <div class="pg-w-10">
+            <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
+              class="pg-total-amount-input"
+              required>
+          </div>
+        </div>
+        <div class="flex flex-row justify-between">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerRequired']"
+            class="pg-error-text">
+            {{ validatorMessages['payerRequired'] }}
+          </div>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerAmountRequired']"
+            class="pg-error-text-right">
+            {{ validatorMessages['payerAmountRequired'] }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-4">
+        <label for="description" class="pg-label">Descripción</label>
+        <textarea id="description" formControlName="description" class="pg-textarea-large"
+          placeholder="Escribe una descripción detallada sobre el gasto..."></textarea>
+      </div>
+
+      <!-- Debtors -->
+      <div formArrayName="debtors" class="mb-4 h-64 overflow-y-auto">
+        <div class="pg-debtors-header">
+          <label class="pg-label">Deudores *</label>
+          <!-- Parece que no funciona la primera condición value.payer-->
+          <button type="button" (click)="addDebtor()"
+            [disabled]="isAddDebtorDisabled()"
+            class="pg-add-debtor-btn">
+            Añadir deudor
+          </button>
+        </div>
+        <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-3 mt-3 h-16">
+            <div class="pg-debtor-row">
+            <div class="pg-flex-col pg-w-85">
+              <select formControlName="id" class="pg-select-full" required>
+                <option value="" disabled selected>Selecciona deudor</option>
+                <option *ngFor="let p of getPossibleDebtors(i)" [value]="p.participant_id">{{ p.participant_name }}
+                </option>
+              </select>
+              <div class="flex flex-row justify-between">
+                <div *ngIf="formSubmitted && debtor.get('id')?.invalid" class="text-red-500 text-sm mt-1">
+                  {{ validatorMessages['debtorsSelectRequired'] }}
+                </div>
+                <div
+                  *ngIf="formSubmitted && debtor.get('amount')?.invalid && expenseForm.get('type_expense')?.value !== 'Equalitarian'"
+                  class="text-red-500 text-sm mt-1 ml-auto">
+                  {{ validatorMessages['debtorsAmountRequired'] }}
+                </div>
+              </div>
+            </div>
+            <div class="pg-debtor-amount-wrap">
+              <input *ngIf="expenseForm.get('type_expense')?.value !== 'Equalitarian'" formControlName="amount"
+                type="number" min="0" placeholder="00.00€"
+                class="pg-debtor-amount-input"
+                required>
+            </div>
+            <button type="button" (click)="removeDebtor(i)" class="pg-ml-2-mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="red"
+                class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="pg-row-right-full">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsExceedTotal']"
+            class="pg-error-text">
+            {{ validatorMessages['debtorsExceedTotal'] }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pg-submit-wrap">
+        <button type="submit"
+          class="pg-submit-btn">
+          Crear gasto
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
