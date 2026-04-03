@@ -1,4 +1,6 @@
 from apps.places.shared_imports import *
+from django.db import transaction
+from apps.places.DTO.places_dto import map_accommodation_detail, map_restaurant_detail, map_activity_detail
 
 # GENERAL DATA
 accommodation_types = [
@@ -36,224 +38,168 @@ activity_types = [
     'auditorium'
 ]
 
+
 # ACCOMMODATION
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_accommodations_from_destination(request, destination_id):
     accommodations = Accommodation.objects.filter(destination_id=destination_id)
     data = []
     for accommodation in accommodations:
         images = AccommodationImage.objects.filter(accommodation=accommodation)
-        images_data = [img.uri for img in images]
-        accommodation_data = {
+        data.append({
             'accommodation': AcommodationSerializer(accommodation).data,
-            'images': images_data
-        } 
-          
-        data.append(accommodation_data)
+            'images': [img.uri for img in images]
+        })
     return JsonResponse({'accommodations': data}, safe=False)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_accommodation_with_images(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        place_id = data.get('place_id')
-        destination_id = data.get('destination')
-        name = data.get('name')
-        primary_type = data.get('primary_type') or 'hotel'
-        rating = data.get('rating')
-        formatted_address = data.get('formattedAddress')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        images = data.get('images', [])
-        is_save = data.get('isSave')
+    data = request.data
+    destination = get_object_or_404(Destination, pk=data.get('destination'))
 
-        destination = Destination.objects.get(pk=destination_id)
-
+    with transaction.atomic():
         accommodation = Accommodation.objects.create(
-            place_id=place_id,
+            place_id=data.get('place_id'),
             destination=destination,
-            name=name,
-            accomodation_type=primary_type,
-            rating=rating,
-            address=formatted_address,
-            latitude=latitude,
-            longitude=longitude,
-            isSave=is_save
+            name=data.get('name'),
+            accomodation_type=data.get('primary_type') or 'hotel',
+            rating=data.get('rating'),
+            address=data.get('formattedAddress'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            isSave=data.get('isSave'),
         )
+        AccommodationImage.objects.bulk_create([
+            AccommodationImage(accommodation=accommodation, uri=uri)
+            for uri in (data.get('images') or [])
+        ])
 
-        for uri in images:
-            AccommodationImage.objects.create(
-                accommodation=accommodation,
-                uri=uri
-            )
-
-        return JsonResponse({'status': 'ok', 'id accommodation': accommodation.place_id})
-    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+    return JsonResponse({'status': 'ok', 'id accommodation': accommodation.place_id}, status=201)
 
 
 # ACTIVITY
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_activities_from_destination(request, destination_id):
     activities = Activity.objects.filter(destination_id=destination_id)
     data = []
     for activity in activities:
         images = ActivityImage.objects.filter(activity=activity)
-        images_data = [img.uri for img in images]
-        activity_data = {
+        data.append({
             'activity': ActivitySerializer(activity).data,
-            'images': images_data
-        }
-        data.append(activity_data)
+            'images': [img.uri for img in images]
+        })
     return JsonResponse({'activities': data}, safe=False)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_activity_with_images(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        place_id = data.get('place_id')
-        destination_id = data.get('destination')
-        name = data.get('name')
-        primary_type = data.get('primary_type') or 'tourist_attraction'
-        rating = data.get('rating')
-        formatted_address = data.get('formattedAddress')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        images = data.get('images', [])
-        is_save = data.get('isSave')
+    data = request.data
+    destination = get_object_or_404(Destination, pk=data.get('destination'))
 
-        destination = Destination.objects.get(pk=destination_id)
-
+    with transaction.atomic():
         activity = Activity.objects.create(
-            place_id=place_id,
+            place_id=data.get('place_id'),
             destination=destination,
-            name=name,
-            activity_type=primary_type,
-            rating=rating,
-            address=formatted_address,
-            latitude=latitude,
-            longitude=longitude,
-            isSave=is_save
+            name=data.get('name'),
+            activity_type=data.get('primary_type') or 'tourist_attraction',
+            rating=data.get('rating'),
+            address=data.get('formattedAddress'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            isSave=data.get('isSave'),
         )
+        ActivityImage.objects.bulk_create([
+            ActivityImage(activity=activity, uri=uri)
+            for uri in (data.get('images') or [])
+        ])
 
-        for uri in images:
-            ActivityImage.objects.create(
-                activity=activity,
-                uri=uri
-            )
-
-        return JsonResponse({'status': 'ok', 'id activity': activity.place_id})
-    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+    return JsonResponse({'status': 'ok', 'id activity': activity.place_id}, status=201)
 
 
 # RESTAURANT
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_restaurants_from_destination(request, destination_id):
     restaurants = Restaurant.objects.filter(destination_id=destination_id)
     data = []
     for restaurant in restaurants:
         images = RestaurantImage.objects.filter(restaurant=restaurant)
-        images_data = [img.uri for img in images]
-        restaurant_data = {
+        data.append({
             'restaurant': RestaurantSerializer(restaurant).data,
-            'images': images_data
-        }
-        data.append(restaurant_data)
+            'images': [img.uri for img in images]
+        })
     return JsonResponse({'restaurants': data}, safe=False)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_restaurant_with_images(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        place_id = data.get('place_id')
-        destination_id = data.get('destination')
-        name = data.get('name')
-        primary_type = data.get('primary_type') or 'restaurant'
-        rating = data.get('rating')
-        formatted_address = data.get('formattedAddress')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        images = data.get('images', [])
-        is_save = data.get('isSave')
+    data = request.data
+    destination = get_object_or_404(Destination, pk=data.get('destination'))
 
-        destination = Destination.objects.get(pk=destination_id)
-
+    with transaction.atomic():
         restaurant = Restaurant.objects.create(
-            place_id=place_id,
+            place_id=data.get('place_id'),
             destination=destination,
-            name=name,
-            restaurant_type=primary_type,
-            rating=rating,
-            address=formatted_address,
-            latitude=latitude,
-            longitude=longitude,
-            isSave=is_save
+            name=data.get('name'),
+            restaurant_type=data.get('primary_type') or 'restaurant',
+            rating=data.get('rating'),
+            address=data.get('formattedAddress'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            isSave=data.get('isSave'),
         )
+        RestaurantImage.objects.bulk_create([
+            RestaurantImage(restaurant=restaurant, uri=uri)
+            for uri in (data.get('images') or [])
+        ])
 
-        for uri in images:
-            RestaurantImage.objects.create(
-                restaurant=restaurant,
-                uri=uri
-            )
+    return JsonResponse({'status': 'ok', 'id restaurante': restaurant.place_id}, status=201)
 
-        return JsonResponse({'status': 'ok', 'id restaurante': restaurant.place_id})
-    return JsonResponse({'error': 'Método no permitido :('}, status=405)
 
 # SAVED PLACES
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_saved_place_with_images(request):
-    if request.method == 'POST':
-        user_id = request.data.get('user_id')
-        place_id = request.data.get('place_id')
-        name = request.data.get('name')
-        primary_type = request.data.get('primary_type')
-        rating = request.data.get('rating')
-        formatted_address = request.data.get('formattedAddress')
-        latitude = request.data.get('latitude')
-        longitude = request.data.get('longitude')
-        isSave = request.data.get('isSave')
-        images = request.data.get('images', [])
+    data = request.data
+    user = get_object_or_404(User, pk=data.get('user_id'))
 
-        try:
-            user = User.objects.get(pk=user_id)
-        except:
-            return JsonResponse({'error' : 'Usuario no encontrado'}, status=404)
-        
-        if SavedPlace.objects.filter(user=user, place_id=place_id).exists():
-            return JsonResponse({'error': 'Este lugar ya está guardado'}, status=400)
-        
+    if SavedPlace.objects.filter(user=user, place_id=data.get('place_id')).exists():
+        return JsonResponse({'error': 'Este lugar ya está guardado'}, status=400)
+
+    with transaction.atomic():
         saved_place = SavedPlace.objects.create(
             user=user,
-            place_id=place_id,
-            name=name,
-            rating=rating,
-            address=formatted_address,
-            place_type=primary_type,
-            latitude=latitude,
-            longitude=longitude,
-            isSave=isSave,
+            place_id=data.get('place_id'),
+            name=data.get('name'),
+            rating=data.get('rating'),
+            address=data.get('formattedAddress'),
+            place_type=data.get('primary_type'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            isSave=data.get('isSave'),
         )
+        SavedPlaceImage.objects.bulk_create([
+            SavedPlaceImage(saved_place=saved_place, uri=uri)
+            for uri in (data.get('images') or [])
+        ])
 
-        for uri in images:
-            SavedPlaceImage.objects.create(
-                saved_place=saved_place,
-                uri=uri
-            )
-
-        return JsonResponse({'status': 'ok', 'id accommodation': saved_place.savedPlaces_id})
-    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+    return JsonResponse({'status': 'ok', 'id accommodation': saved_place.savedPlaces_id}, status=201)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_saved_places_by_category(request, user_id):
-
-    
     saved_places = SavedPlace.objects.filter(user_id=user_id)
-    accommodations = []
-    restaurants = []
-    activities = []   
-     
+    accommodations, restaurants, activities = [], [], []
+
     for place in saved_places:
         images = SavedPlaceImage.objects.filter(saved_place=place)
-        images_data = [img.uri for img in images]
         place_data = {
             'saved_place': SavedPlacesSerializer(place).data,
-            'images': images_data
+            'images': [img.uri for img in images]
         }
         if place.place_type in accommodation_types:
             accommodations.append(place_data)
@@ -267,123 +213,82 @@ def get_saved_places_by_category(request, user_id):
         'restaurants': restaurants,
         'activities': activities,
     }, safe=False)
-    
-# SAVED PLACES - Alojamientos
-def get_saved_accommodations(request, user_id):
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_saved_accommodations(request, user_id):
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=accommodation_types)
     data = []
     for place in saved_places:
         images = SavedPlaceImage.objects.filter(saved_place=place)
-        images_data = [img.uri for img in images]
         data.append({
             'saved_place': SavedPlacesSerializer(place).data,
-            'images': images_data
+            'images': [img.uri for img in images]
         })
     return JsonResponse({'saved_accommodations': data}, safe=False)
 
 
-# SAVED PLACES - Restauración / Gastronomía
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_saved_restaurants(request, user_id):
-
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=restaurant_types)
     data = []
     for place in saved_places:
         images = SavedPlaceImage.objects.filter(saved_place=place)
-        images_data = [img.uri for img in images]
         data.append({
             'saved_place': SavedPlacesSerializer(place).data,
-            'images': images_data
+            'images': [img.uri for img in images]
         })
     return JsonResponse({'saved_restaurants': data}, safe=False)
 
 
-# SAVED PLACES - Actividades / Turismo
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_saved_activities(request, user_id):
-    
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=activity_types)
     data = []
     for place in saved_places:
         images = SavedPlaceImage.objects.filter(saved_place=place)
-        images_data = [img.uri for img in images]
         data.append({
             'saved_place': SavedPlacesSerializer(place).data,
-            'images': images_data
+            'images': [img.uri for img in images]
         })
     return JsonResponse({'saved_activities': data}, safe=False)
+
 
 # RECIBIR TODAS LAS CATEGORIAS A PARTIR DEL ID DEL DESTINO
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_all_categories_from_destination(request):
-    if request.method == "POST":
-        destination_id = request.data.get('destination_id')
-        if not destination_id:
-            return JsonResponse({'error': 'destination_id es requerido'}, status=400)
-        try: 
-            destination = Destination.objects.get(pk=destination_id)
-        except Destination.DoesNotExist:
-            return JsonResponse({'error': 'Destination no encontrado'}, status=400)
-        
-        destination_data = DestinationSerializer(destination).data
-        
-        # ALOJAMIENTOS
-        accommodations = Accommodation.objects.filter(destination=destination)
-        accommodations_data = []
-        for alj in accommodations:
-            images = AccommodationImage.objects.filter(accommodation=alj)
-            images_data = [img.uri for img in images]
-            accommodations_data.append({
-                'accommodation': alj.name,
-                'id': alj.place_id,
-                'accommodaton_type': alj.accomodation_type,
-                'address': alj.address,
-                'rating': alj.rating if alj.rating is not None else 3.0,
-                'latitude': alj.latitude,
-                'longitude': alj.longitude,
-                'images': images_data,
-                'isSave': alj.isSave,
-            })
-            
-        # RESTAURANTES     
-        restaurants = Restaurant.objects.filter(destination=destination)
-        restaurants_data = []
-        for rest in restaurants:
-            images = RestaurantImage.objects.filter(restaurant=rest)
-            images_data = [img.uri for img in images]
-            restaurants_data.append({
-                'restaurant': rest.name,
-                'id': rest.place_id,
-                'restaurant_type': rest.restaurant_type,
-                'rating': rest.rating if rest.rating is not None else 3.0,
-                'address': rest.address,
-                'latitude': rest.latitude,
-                'longitude': rest.longitude,
-                'images': images_data,
-                'isSave': rest.isSave,
-            })
+    destination_id = request.data.get('destination_id')
+    if not destination_id:
+        return JsonResponse({'error': 'destination_id es requerido'}, status=400)
 
-        # ACTIVIDADES
-        activities = Activity.objects.filter(destination=destination)
-        activities_data = []
-        for act in activities:
-            images = ActivityImage.objects.filter(activity=act)
-            images_data = [img.uri for img in images]
-            activities_data.append({
-                'activity': act.name,
-                'place_id': act.place_id,
-                'activity_type': act.activity_type,
-                'rating': act.rating if act.rating is not None else 3.0,
-                'address': act.address,
-                'latitude': act.latitude,
-                'longitude': act.longitude,
-                'images': images_data,
-                'isSave': act.isSave,
-            })
-            
-        return JsonResponse({
-            'destination': destination_data,
-            'accommodations': accommodations_data,
-            'restaurants': restaurants_data,
-            'activities': activities_data,
-        })
+    destination = get_object_or_404(Destination, pk=destination_id)
+    destination_data = DestinationSerializer(destination).data
+
+    # ALOJAMIENTOS
+    accommodations_data = [
+        map_accommodation_detail(alj, [img.uri for img in AccommodationImage.objects.filter(accommodation=alj)])
+        for alj in Accommodation.objects.filter(destination=destination)
+    ]
+
+    # RESTAURANTES
+    restaurants_data = [
+        map_restaurant_detail(rest, [img.uri for img in RestaurantImage.objects.filter(restaurant=rest)])
+        for rest in Restaurant.objects.filter(destination=destination)
+    ]
+
+    # ACTIVIDADES
+    activities_data = [
+        map_activity_detail(act, [img.uri for img in ActivityImage.objects.filter(activity=act)])
+        for act in Activity.objects.filter(destination=destination)
+    ]
+
+    return JsonResponse({
+        'destination': destination_data,
+        'accommodations': accommodations_data,
+        'restaurants': restaurants_data,
+        'activities': activities_data,
+    })

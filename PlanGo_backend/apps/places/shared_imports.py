@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from apps.places.models.accommodation import Accommodation
 from apps.users.models.user import User
@@ -30,7 +30,7 @@ PLACES_API_KEY = settings.API_KEY
 
 __all__ = [
     "api_view", "permission_classes", "IsAuthenticated", "status", "Response",
-    "render", "JsonResponse", "Accommodation", "User",
+    "render", "get_object_or_404", "JsonResponse", "Accommodation", "User",
     "AcommodationSerializer", "ActivitySerializer", "RestaurantSerializer", "SavedPlacesSerializer",
     "DestinationSerializer", "AccommodationImage", "Activity", "ActivityImage",
     "Destination", "Restaurant", "RestaurantImage", "SavedPlace", "SavedPlaceImage",
