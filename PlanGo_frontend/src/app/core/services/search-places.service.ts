@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, switchMap, throwError } from 'rxjs';
+import { map, Observable, of, switchMap, throwError } from 'rxjs';
 import { globals } from '../globals';
 import { MessageService } from '../messageService';
 
@@ -9,9 +9,7 @@ import { MessageService } from '../messageService';
   providedIn: 'root'
 })
 export class SearchPlacesService {
-
   categoriaSeleccionada: string | null = null;
-
   private csrfToken: string = '';
 
   constructor(
@@ -36,7 +34,7 @@ export class SearchPlacesService {
 
   googlePlacesSearchNearby(payload: { latitude: number, longitude: number, radius?: number }): Observable<any> {
     let headers = this.createHeaders();
-    return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`, payload, { headers });
+    return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`, payload, { headers, withCredentials: true });
   }
 
   saveAccommodationWithImages(payload: any): Observable<any> {
@@ -54,4 +52,27 @@ export class SearchPlacesService {
     return this.httpClient.post(`${globals.apiBaseUrl}/places/create_activity/`, payload, { headers });
   }
 
+  getCsrfTokenFromServer(): Observable<string> {
+    if (!isPlatformBrowser(this.platformId)) return of('');
+
+    const token = localStorage.getItem(globals.keys.accessToken) || '';
+    if (!token) {
+      return throwError(() => new Error('Token de usuario no disponible'));
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.httpClient.get<{ csrftoken: string }>(`${globals.apiBaseUrl}/itineraries/csrf-token/`, {
+      headers,
+      withCredentials: true,
+    }).pipe(
+      map((response) => response.csrftoken)
+    );
+  }
+
+  setCsrfToken(token: string): void {
+    this.csrfToken = token.replace(/^"|"$/g, '');
+  }
 }

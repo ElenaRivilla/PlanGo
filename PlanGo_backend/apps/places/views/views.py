@@ -1,33 +1,6 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from rest_framework.response import Response
-from django.shortcuts import render
-from django.http import JsonResponse
-from apps.places.models.accommodation import Accommodation
-from apps.users.models.user import User
-from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSerializer, SavedPlacesSerializer
-from ..itineraries.serializer import DestinationSerializer
-from apps.places.models.accommodation_image import AccommodationImage
-from apps.places.models.activity import Activity
-from apps.places.models.activity_image import ActivityImage
-from apps.itineraries.models.destination import Destination
-from apps.places.models.restaurant import Restaurant
-from apps.places.models.restaurant_image import RestaurantImage
-from apps.places.models.saved_place import SavedPlace
-from apps.places.models.saved_place_image import SavedPlaceImage
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-from django.http import JsonResponse
-from django.conf import settings
-import requests
-import json
-import os
-# Create your views here.
-PLACES_API_KEY = settings.API_KEY
+from apps.places.shared_imports import *
 
 # GENERAL DATA
-
 accommodation_types = [
     'lodging', 'hotel', 'motel', 'resort_hotel', 'hostel', 'bed_and_breakfast',
     'guest_house', 'campground', 'mobile_home_park', 'cottage', 'extended_stay_hotel',
@@ -78,7 +51,6 @@ def get_accommodations_from_destination(request, destination_id):
         data.append(accommodation_data)
     return JsonResponse({'accommodations': data}, safe=False)
 
-@csrf_exempt
 def create_accommodation_with_images(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -131,7 +103,6 @@ def get_activities_from_destination(request, destination_id):
         data.append(activity_data)
     return JsonResponse({'activities': data}, safe=False)
 
-@csrf_exempt
 def create_activity_with_images(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -184,7 +155,6 @@ def get_restaurants_from_destination(request, destination_id):
         data.append(restaurant_data)
     return JsonResponse({'restaurants': data}, safe=False)
 
-@csrf_exempt
 def create_restaurant_with_images(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -342,68 +312,6 @@ def get_saved_activities(request, user_id):
         })
     return JsonResponse({'saved_activities': data}, safe=False)
 
-
-# API GOOGLE PLACES
-@csrf_exempt
-@require_POST
-def google_places_search_nearby(request):
-    api_key = PLACES_API_KEY
-    data = json.loads(request.body)
-    
-    lat = data.get('latitude', 39.576003)
-    lng = data.get('longitude', 2.654179)
-    radius = data.get('radius', 50000)
-    category = data.get('category', 'Alojamientos')
-    user_id = data.get('user_id')  # <-- Recibe el user_id del frontend
-    category = category.strip().lower() 
-
-    match category:
-        case "alojamientos":
-            included_types = [
-                "lodging", "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel"
-            ]
-        case "comer y beber":
-            included_types = [
-                "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant"
-            ]
-        case "cosas que hacer":
-            included_types = [
-                "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park", "night_club", 
-                 "church", "mosque"
-            ]
-        case _:
-            included_types = []
-
-    payload = {
-        "includedTypes": included_types,
-        "locationRestriction": {
-            "circle": {
-                "center": {
-                    "latitude": lat,
-                    "longitude": lng
-                },
-                "radius": radius
-            }
-        },
-    }
-    headers = {
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.priceLevel,places.websiteUri,places.primaryType,places.types,places.regularOpeningHours,places.photos,places.nationalPhoneNumber"
-    }
-
-    url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
-    response = requests.post(url, json=payload, headers=headers)
-    data = response.json()
-
-    from apps.places.models.saved_place import SavedPlace
-    saved_place_ids = set()
-    if user_id:
-        saved_place_ids = set(SavedPlace.objects.filter(user_id=user_id).values_list('place_id', flat=True))
-
-    for place in data.get('places', []):
-        place['isSave'] = place.get('id') in saved_place_ids
-    return JsonResponse(data, safe=False)
-
-
 # RECIBIR TODAS LAS CATEGORIAS A PARTIR DEL ID DEL DESTINO
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -479,5 +387,3 @@ def get_all_categories_from_destination(request):
             'restaurants': restaurants_data,
             'activities': activities_data,
         })
-    
-

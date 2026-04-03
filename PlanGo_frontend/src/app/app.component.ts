@@ -6,6 +6,7 @@ import { trigger, transition, style, animate, group, query } from '@angular/anim
 import { ItinerariesService } from './core/services/itineraries.service';
 import { DestinationService } from './core/services/destinations.service';
 import { SearchLocationService } from './core/services/search-location.service';
+import { SearchPlacesService } from './core/services/search-places.service';
 import { environment } from '../environments/environment';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -68,8 +69,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     private itinerariesService: ItinerariesService,
     private destinationService: DestinationService,
     private searchLocationService: SearchLocationService,
+    private searchPlacesService: SearchPlacesService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     registerLocaleData(localeEs);
@@ -91,16 +93,25 @@ export class AppComponent implements OnInit, AfterViewInit {
         console.error('Error al obtener el token CSRF:', err);
       },
     });
-    
+
     this.searchLocationService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
         this.searchLocationService.setCsrfToken(csrfToken);
       },
       error: (err) => {
         console.error('Error al obtener el token CSRF:', err);
-    },
-  });
-}
+      },
+    });
+
+    this.searchPlacesService.getCsrfTokenFromServer().subscribe({
+      next: (csrfToken) => {
+        this.searchPlacesService.setCsrfToken(csrfToken);
+      },
+      error: (err) => {
+        console.error('Error al obtener el token CSRF (searchPlaces):', err);
+      },
+    });
+  }
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
