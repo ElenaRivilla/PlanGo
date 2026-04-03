@@ -1,6 +1,5 @@
 from apps.places.shared_imports import *
 from django.db import transaction
-from apps.places.DTO.places_dto import map_accommodation_detail, map_restaurant_detail, map_activity_detail
 
 # GENERAL DATA
 accommodation_types = [
@@ -269,22 +268,52 @@ def get_all_categories_from_destination(request):
     destination_data = DestinationSerializer(destination).data
 
     # ALOJAMIENTOS
-    accommodations_data = [
-        map_accommodation_detail(alj, [img.uri for img in AccommodationImage.objects.filter(accommodation=alj)])
-        for alj in Accommodation.objects.filter(destination=destination)
-    ]
+    accommodations_data = []
+    for alj in Accommodation.objects.filter(destination=destination):
+        images = AccommodationImage.objects.filter(accommodation=alj)
+        accommodations_data.append({
+            'accommodation': alj.name,
+            'id': alj.place_id,
+            'accommodaton_type': alj.accomodation_type,
+            'address': alj.address,
+            'rating': alj.rating if alj.rating is not None else 3.0,
+            'latitude': alj.latitude,
+            'longitude': alj.longitude,
+            'images': [img.uri for img in images],
+            'isSave': alj.isSave,
+        })
 
     # RESTAURANTES
-    restaurants_data = [
-        map_restaurant_detail(rest, [img.uri for img in RestaurantImage.objects.filter(restaurant=rest)])
-        for rest in Restaurant.objects.filter(destination=destination)
-    ]
+    restaurants_data = []
+    for rest in Restaurant.objects.filter(destination=destination):
+        images = RestaurantImage.objects.filter(restaurant=rest)
+        restaurants_data.append({
+            'restaurant': rest.name,
+            'id': rest.place_id,
+            'restaurant_type': rest.restaurant_type,
+            'rating': rest.rating if rest.rating is not None else 3.0,
+            'address': rest.address,
+            'latitude': rest.latitude,
+            'longitude': rest.longitude,
+            'images': [img.uri for img in images],
+            'isSave': rest.isSave,
+        })
 
     # ACTIVIDADES
-    activities_data = [
-        map_activity_detail(act, [img.uri for img in ActivityImage.objects.filter(activity=act)])
-        for act in Activity.objects.filter(destination=destination)
-    ]
+    activities_data = []
+    for act in Activity.objects.filter(destination=destination):
+        images = ActivityImage.objects.filter(activity=act)
+        activities_data.append({
+            'activity': act.name,
+            'place_id': act.place_id,
+            'activity_type': act.activity_type,
+            'rating': act.rating if act.rating is not None else 3.0,
+            'address': act.address,
+            'latitude': act.latitude,
+            'longitude': act.longitude,
+            'images': [img.uri for img in images],
+            'isSave': act.isSave,
+        })
 
     return JsonResponse({
         'destination': destination_data,
