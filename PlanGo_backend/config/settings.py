@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR.parent / '.env')
 
-API_KEY = os.getenv('PLAN_GO_API_PLACES_KEY', '') 
+API_KEY = os.getenv('PLAN_GO_API_PLACES_KEY', '')
 GEONAMES_API_KEY = os.getenv('PLANG_GO_GEOCODES_KEY', '')
 REDIS_HOST = os.getenv("REDIS_HOST", "")
 REDIS_PORT = os.getenv("REDIS_PORT", "")

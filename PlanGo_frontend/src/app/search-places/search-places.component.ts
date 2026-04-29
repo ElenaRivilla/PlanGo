@@ -11,7 +11,6 @@ import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { DestinationService } from "../core/services/destinations.service";
 import { BaseToastService } from '../core/services/base-toast.service';
 import { SearchPlacesService } from '../core/services/search-places.service';
-import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { ViewChild } from '@angular/core';
 import { ToastModule } from "primeng/toast";
@@ -62,8 +61,8 @@ export class SearchPlacesComponent {
   savedPlaceIdsByPlaces: string[] = [];
   sectionOpen = false;
   places: any[] = [];
-  googlePlacesApiKey?: string;
   activeSection: string | null = null;
+  activeSectionIndex: number = -1;
   selectedPlace: any = null;
   selectedPlaceImages: any[] = [];
   savedPlaceIds: string[] = [];
@@ -84,7 +83,6 @@ export class SearchPlacesComponent {
     private route: ActivatedRoute,
     private router: Router,
     private toast: BaseToastService,
-    private apiKeyService: ApiKeyService,
     private itinerariesService: ItinerariesService,
     private savedPlacesService: SavedPlacesService,
   ) {
@@ -107,6 +105,13 @@ export class SearchPlacesComponent {
       this.selectedCategory = params.get('category');
       this.activeSection = params.get('category');
       this.sections.forEach(section => section.isOpen = false);
+
+      // Abrir automáticamente la sección activa
+      this.activeSectionIndex = this.sections.findIndex(s => s.title === this.activeSection);
+      if (this.activeSectionIndex !== -1) {
+        this.sections[this.activeSectionIndex].isOpen = true;
+      }
+
       let destinationIdParam = params.get('destinationId');
       let destinationId = destinationIdParam ? Number(destinationIdParam) : null;
       this.currentDestination = undefined; // Limpia el destino anterior
@@ -141,21 +146,13 @@ export class SearchPlacesComponent {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => {
-        this.googlePlacesApiKey = data.googlePlacesApiKey;
-      },
-      error: (err: any) => {
-        console.log("No ha recibido la KEY de Google Places API.")
-      }
-    });
-  }
-
   toggleSection(index: number): void {
     this.sections.forEach((section, i) => {
       if (i === index) {
         section.isOpen = !section.isOpen;
+        if (section.isOpen) {
+          this.activeSectionIndex = i;
+        }
       } else {
         section.isOpen = false;
       }
@@ -176,16 +173,13 @@ export class SearchPlacesComponent {
           category: this.selectedCategory,
           user_id: userId
         };
-        this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
+        this.searchPlacesService.searchNearby(payload).subscribe({
           next: (data: any) => {
-            // Suponiendo que tienes un array this.savedPlaceIds con los IDs guardados
-            this.places = (data.places || [])
-              .filter((p: any) => p.photos && p.photos.length > 0)
-              .map((place: any) => ({
-                ...place,
-                isSaveByPlace: this.savedPlaceIdsByPlace.includes(place.id),
-                isSaveByPlaces: this.savedPlaceIdsByPlaces.includes(place.id)
-              }));
+            this.places = (data.places || []).map((place: any) => ({
+              ...place,
+              isSaveByPlace: this.savedPlaceIdsByPlace.includes(place.id),
+              isSaveByPlaces: this.savedPlaceIdsByPlaces.includes(place.id)
+            }));
           },
           error: (err: any) => {
             this.places = [];
@@ -200,14 +194,14 @@ export class SearchPlacesComponent {
   }
 
   getPhotoUrl(photo: any): string {
-    if (photo?.name && this.googlePlacesApiKey) {
-      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+    if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
+      return photo;
     }
     return 'assets/no-image.png';
   }
 
   getActiveSectionIndex(): number {
-    return this.sections.findIndex(s => s.title === this.activeSection);
+    return this.activeSectionIndex;
   }
 
   onPlaceSelect(place: any) {

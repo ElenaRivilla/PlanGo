@@ -25,8 +25,7 @@ from django.conf import settings
 import requests
 import json
 import os
-from .services import google_places_service
-PLACES_API_KEY = settings.API_KEY
+from .services import overpass_service
 
 __all__ = [
     "api_view", "permission_classes", "IsAuthenticated", "status", "Response",
@@ -35,5 +34,5 @@ __all__ = [
     "DestinationSerializer", "AccommodationImage", "Activity", "ActivityImage",
     "Destination", "Restaurant", "RestaurantImage", "SavedPlace", "SavedPlaceImage",
     "csrf_exempt", "authentication_classes", "require_POST", "settings", "requests", "json", "os",
-    "PLACES_API_KEY", "google_places_service", "get_token"
+    "overpass_service", "get_token"
 ]

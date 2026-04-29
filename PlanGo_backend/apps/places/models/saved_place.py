@@ -6,7 +6,7 @@ class SavedPlace(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_places')
     place_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    rating = models.DecimalField(max_digits=2, decimal_places=1)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     address = models.TextField()
     PLACE_TYPES = [
         # Alojamientos

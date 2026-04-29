@@ -5,7 +5,7 @@ class Activity(models.Model):
     place_id = models.CharField(max_length=255, primary_key=True)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='activities')
     name = models.CharField(max_length=255)
-    rating = models.DecimalField(max_digits=2, decimal_places=1)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     address = models.TextField()
     ACTIVITY_TYPES = [
         ('adventure_sports_center', 'Adventure Sports Center'),

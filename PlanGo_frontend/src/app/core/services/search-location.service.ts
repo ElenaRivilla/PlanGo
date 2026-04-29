@@ -11,7 +11,6 @@ import { MessageService } from '../messageService';
 export class SearchLocationService {
     activePhotoIndex: number = 0;
     selectedPlaceImages: any[] = [];
-    googlePlacesApiKey?: string;
     activeMarker: any = null;
 
     private csrfToken: string = '';

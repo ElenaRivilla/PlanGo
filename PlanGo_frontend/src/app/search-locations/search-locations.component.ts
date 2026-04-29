@@ -11,7 +11,6 @@ import { Destination } from '../destinations/interfaces/destinations.interface';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { SearchLocationService } from '../core/services/search-location.service';
-import { ApiKeyService } from '../core/services/api-key.service';
 
 @Component({
   selector: 'app-search-locations',
@@ -44,7 +43,6 @@ export class SearchLocationsComponent {
   activeMarker: any = null;
   activePhotoIndex: number = 0;
   selectedPlaceImages: any[] = [];
-  googlePlacesApiKey?: string;
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   selectedPlace: any = null;
   mapLocation: any = { lat: 39.720007, lng: 2.910419 }; // o el centro por defecto
@@ -61,7 +59,6 @@ export class SearchLocationsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private toast: BaseToastService,
-    private apiKeyService: ApiKeyService
   ) {
 
     const rawIcons = [
@@ -131,17 +128,6 @@ export class SearchLocationsComponent {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => {
-        this.googlePlacesApiKey = data.googlePlacesApiKey;
-      },
-      error: (err: any) => {
-        console.log("No ha recibido la KEY de Google Places API.")
-      }
-    });
-  }
-
   onDestinationSelect(destination: Destination): void {
     this.selectedDestination = [destination];
     this.mapLocation = {
@@ -152,25 +138,9 @@ export class SearchLocationsComponent {
 
   editCategory(category: string, destination: Destination): void {
     if (category === 'Alojamientos' || category === 'Comer y beber' || category === 'Cosas que hacer') {
-      const payload = {
-        latitude: Number(destination.latitude),
-        longitude: Number(destination.longitude),
-        radius: 20000, 
-        category: category,
-      };
-
-      this.destinationService.googlePlacesSearchNearby(payload).subscribe({
-        next: (result) => {
-          this.router.navigate(['/search/places'], {
-            queryParams: { category, destinationId: destination.destination_id }
-          });
-        },
-        error: (err) => {
-          console.error('Error buscando la categoría:', err);
-        },
+      this.router.navigate(['/search/places'], {
+        queryParams: { category, destinationId: destination.destination_id }
       });
-    } else {
-      console.warn('Categoría no soportada:', category);
     }
   }
 
@@ -211,7 +181,9 @@ export class SearchLocationsComponent {
   }
 
   getPhotoUrl(photo: any): string {
-    let cleanPhoto = photo.replace(/^"+|"+$/g, '');
-    return `https://places.googleapis.com/v1/${cleanPhoto}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+    if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
+      return photo;
+    }
+    return 'assets/no-image.png';
   }
 }

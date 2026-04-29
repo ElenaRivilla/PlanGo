@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { ApiKeyService } from '../services/api-key.service';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -25,7 +24,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   activeMarker: any = null;
   activePhotoIndex = 0;
   selectedPlaceImages: any[] = [];
-  googlePlacesApiKey?: string;
   showPopup = false;
 
   private map: any = null;
@@ -34,7 +32,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   private resizeObserver?: ResizeObserver;
 
   constructor(
-    public apiKeyService: ApiKeyService,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
@@ -43,10 +40,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.initMap();
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => { this.googlePlacesApiKey = data.googlePlacesApiKey; },
-      error: () => {},
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -145,22 +138,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   }
 
   getPhotoUrl(photo: any): string {
-    if (photo?.name && this.googlePlacesApiKey) {
-      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
-    }
-    if (typeof photo === 'string') {
-      if (photo.startsWith('places/') && this.googlePlacesApiKey) {
-        return `https://places.googleapis.com/v1/${photo}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
-      }
+    if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
       return photo;
     }
     return 'assets/no-image.png';
   }
 
-  openGoogleMapsPlace(): void {
-    const placeId = this.activeMarker?.place?.id || this.activeMarker?.place?.place_id;
-    if (placeId) {
-      window.open(`https://www.google.com/maps/place/?q=place_id:${placeId}`, '_blank');
+  openOsmPlace(): void {
+    const lat = this.activeMarker?.place?.location?.latitude ?? this.activeMarker?.place?.latitude;
+    const lng = this.activeMarker?.place?.location?.longitude ?? this.activeMarker?.place?.longitude;
+    if (lat && lng) {
+      window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}`, '_blank');
     }
   }
 }

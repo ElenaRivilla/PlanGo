@@ -9,7 +9,6 @@ import { Destination } from '../destinations/interfaces/destinations.interface';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { SearchLocationService } from '../core/services/search-location.service';
-import { ApiKeyService } from '../core/services/api-key.service';
 import { SavedPlacesService } from '../core/services/saved-places.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
 
@@ -41,7 +40,6 @@ export class SavedPlacesComponent {
   errorMessage: string = '';
   activePhotoIndex: number = 0;
   selectedPlaceImages: any[] = [];
-  googlePlacesApiKey?: string;
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   selectedPlace: any = null;
   mapLocation: any = { lat: 39.720007, lng: 2.910419 }; // o el centro por defecto
@@ -56,7 +54,6 @@ export class SavedPlacesComponent {
     private searchLocationService: SearchLocationService,
     private itinerariesService: ItinerariesService,
     private toast: BaseToastService,
-    private apiKeyService: ApiKeyService,
     private savedPlacesService: SavedPlacesService,
   ) {
 
@@ -110,17 +107,6 @@ export class SavedPlacesComponent {
       },
       error: (err: any) => {
         console.error('No se pudo obtener el userId', err);
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.apiKeyService.getGooglePlacesApiKey().subscribe({
-      next: (data: any) => {
-        this.googlePlacesApiKey = data.googlePlacesApiKey;
-      },
-      error: (err: any) => {
-        console.log("No ha recibido la KEY de Google Places API.")
       }
     });
   }
@@ -180,7 +166,9 @@ export class SavedPlacesComponent {
   }
 
   getPhotoUrl(photo: any): string {
-    let cleanPhoto = photo.replace(/^"+|"+$/g, '');
-    return `https://places.googleapis.com/v1/${cleanPhoto}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+    if (typeof photo === 'string' && (photo.startsWith('http://') || photo.startsWith('https://'))) {
+      return photo;
+    }
+    return 'assets/no-image.png';
   }
 }
