@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MapComponent } from '../core/map/map.component';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
@@ -26,7 +26,6 @@ import { ApiKeyService } from '../core/services/api-key.service';
   ],
   templateUrl: './search-locations.component.html',
   styleUrl: './search-locations.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SearchLocationsComponent {
   @ViewChild('participants') participantsComponent!: ParticipantsComponent;

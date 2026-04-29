@@ -9,5 +9,5 @@ cred_path = os.path.join(os.path.dirname(__file__), 'firebase-credentials.json')
 if not firebase_admin._apps:
     cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred, {
-        'projectId': 'fct24-25'  
+        'projectId': 'plango-e10f1'  
     })

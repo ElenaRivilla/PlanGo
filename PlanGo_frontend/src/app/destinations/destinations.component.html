@@ -29,8 +29,7 @@
               [startDateStr]="itineraryStartDate"
               [itineraryStartDate]="itineraryStartDate"
               [otherOccupiedDays]="0"
-              [destinationStartDate]="itineraryStartDate"
-              [disabled]="true">
+              [destinationStartDate]="itineraryStartDate">
             </app-day-counter>
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -110,7 +109,6 @@
 
           <app-day-counter [idDestino]="destination.destination_id" [city]="destination.city_name"
             [max]="itineraryTotalDays" [startDateStr]="itineraryStartDate" [itineraryStartDate]="itineraryStartDate"
-            [itineraryEndDate]="destination.end_date ? (destination.end_date | date:'yyyy-MM-dd') : ''"
             [itineraryTotalDays]="itineraryTotalDays"
             [days]="calculateDays(destination.start_date, destination.end_date)"
             [otherOccupiedDays]="getOtherOccupiedDays(destination.destination_id)"

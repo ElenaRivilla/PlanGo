@@ -1,10 +1,9 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { Itinerary } from './interfaces/itinerary.interface';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import { MapComponent } from '../core/map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -24,13 +23,11 @@ import { ValidatorMessages } from '../core/validators/validator-messages';
   imports: [
     CommonModule,
     HeaderComponent,
-    GoogleMapsModule,
     MapComponent,
     ReactiveFormsModule,
     NgSelectModule,
     ToastModule,
     CalendarModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
   itineraries: Itinerary[] = [];

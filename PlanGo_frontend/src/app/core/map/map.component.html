@@ -1,26 +1,31 @@
-<google-map [center]="center" [zoom]="zoom" [options]="mapOptions" style="height: 100%; width: 100%;">
-  <map-marker *ngFor="let marker of markers; let i = index" [position]="{ lat: marker.lat, lng: marker.lng }"
-    [title]="marker.label || ''" (mapClick)="openInfoWindow(i, marker)">
-  </map-marker>
-  <map-info-window #infoWindow>
+<div class="map-host-wrapper">
+  <div #mapContainer class="leaflet-map-container"></div>
+
+  <!-- Panel de información al seleccionar un marcador -->
+  <div *ngIf="showPopup && activeMarker" class="pg-map-popup-overlay">
     <div class="pg-map-info">
       <div class="pg-map-title-row">
         <span class="pg-map-title">
           {{ activeMarker?.place?.displayName?.text
           || activeMarker?.place?.accommodation
           || activeMarker?.place?.restaurant
-          || activeMarker?.place?.activity 
+          || activeMarker?.place?.activity
           || activeMarker?.place?.name
           || '-' }}
         </span>
         <span class="pg-map-info-actions">
-          <!-- i de información -->
           <button pTooltip="Ver más información en Google Maps" tooltipPosition="top" type="button"
             (click)="openGoogleMapsPlace()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray"
               class="pg-map-info-icon">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
+          </button>
+          <button type="button" (click)="closePopup()" class="pg-map-close-btn" title="Cerrar">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray"
+              class="pg-map-info-icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
         </span>
@@ -32,9 +37,7 @@
           || '-' }}
         </div>
         <div class="pg-map-rating">
-          <!-- Estrella de rating -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-            class="pg-map-star">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="pg-map-star">
             <path
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
           </svg>
@@ -45,16 +48,10 @@
       <div class="pg-map-carousel">
         <ng-container
           *ngIf="(activeMarker?.place?.photos?.length || activeMarker?.place?.images?.length); else noImage">
-          <button class="pg-map-photo-btn pg-map-photo-btn-left"
-            (click)="prevPhoto($event)">
-            ‹
-          </button>
+          <button class="pg-map-photo-btn pg-map-photo-btn-left" (click)="prevPhoto($event)">‹</button>
           <img [src]="getPhotoUrl(selectedPlaceImages[activePhotoIndex])" class="pg-map-photo-img"
             alt="Imagen del lugar" />
-          <button class="pg-map-photo-btn pg-map-photo-btn-right"
-            (click)="nextPhoto($event)">
-            ›
-          </button>
+          <button class="pg-map-photo-btn pg-map-photo-btn-right" (click)="nextPhoto($event)">›</button>
           <div class="pg-map-dots">
             <span *ngFor="let photo of (activeMarker.place.photos || activeMarker.place.images); let i = index"
               class="pg-map-dot" [ngClass]="i === activePhotoIndex ? 'bg-primary' : 'bg-gray-300'">
@@ -62,14 +59,14 @@
           </div>
         </ng-container>
         <ng-template #noImage>
-          <!-- Placeholder de imagen -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" class="pg-map-placeholder-svg">
             <rect width="48" height="48" rx="8" fill="#e5e7eb" />
-            <path d="M16 32l8-8 8 8" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 32l8-8 8 8" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
             <circle cx="20" cy="20" r="2" fill="#a1a1aa" />
           </svg>
         </ng-template>
       </div>
     </div>
-  </map-info-window>
-</google-map>
+  </div>
+</div>

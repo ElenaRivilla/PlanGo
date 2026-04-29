@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DestinationService } from '../core/services/destinations.service';
 import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface';
@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../core/map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
@@ -29,15 +28,12 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
     FormsModule,
     HeaderComponent,
     ParticipantsComponent,
-    GoogleMapsModule,
     MapComponent,
     NgSelectModule,
     CounterDatesComponent,
     ToastModule,
     BackButtonComponent,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-
 })
 export class DestinationsComponent implements OnInit {
   destinations: Destination[] = [];

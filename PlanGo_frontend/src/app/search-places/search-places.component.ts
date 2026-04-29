@@ -55,7 +55,7 @@ export class SearchPlacesComponent {
   @ViewChild('mapRef') mapComponent!: MapComponent;
   selectedCategory: string | null = null;
   currentDestination?: Destination;
-  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 };
+  mapLocation: { lat: number, lng: number } = { lat: 39.72596642771257, lng: 2.914616467674367 };
   destinations: Destination[] = [];
   svgIcons: SafeHtml[] = [];
   savedPlaceIdsByPlace: string[] = [];

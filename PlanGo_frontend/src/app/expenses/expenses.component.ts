@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { DestinationService } from '../core/services/destinations.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
@@ -9,7 +9,6 @@ import { ExpensesService } from '../core/services/expenses.service';
 import { UserExpenses } from './interfaces/userExpenses.interface';
 import { HeaderComponent } from '../header/header.component';
 import { Expenses } from './interfaces/expenses.interface';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BaseToastService } from '../core/services/base-toast.service';
@@ -24,12 +23,10 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
   imports: [
     CommonModule,
     HeaderComponent,
-    GoogleMapsModule,
     ReactiveFormsModule,
     ToastModule,
     BackButtonComponent
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class ExpensesComponent implements OnInit {
@@ -45,14 +42,7 @@ export class ExpensesComponent implements OnInit {
   formSubmitted: boolean = false;
   errorMessage: string = '';
   validatorMessages = ValidatorMessages;
-  center = { lat: 39.720007, lng: 2.910419 };
-  zoom = 13;
-  map!: google.maps.Map;
   selectedDestination: any = null;
-  mapOptions: google.maps.MapOptions = {
-    mapId: 'DEMO_MAP_ID',
-    disableDefaultUI: true,
-  };
 
   constructor(
     private expensesService: ExpensesService,
