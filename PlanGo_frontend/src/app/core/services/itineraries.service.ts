@@ -1,11 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, switchMap, throwError, of } from 'rxjs';
+import { catchError, map, Observable, shareReplay, switchMap, tap, throwError, of } from 'rxjs';
 import { globals } from '../globals';
 import { BaseHttpService } from './base-http.service';
 import { MessageService } from '../messageService';
-import { user } from '@angular/fire/auth';
 import { Itinerary } from '../../itineraries/interfaces/itinerary.interface';
 
 @Injectable({
@@ -13,16 +12,30 @@ import { Itinerary } from '../../itineraries/interfaces/itinerary.interface';
 })
 export class ItinerariesService extends BaseHttpService {
   private csrfToken: string = '';
+  private userId$: Observable<number | null> | null = null;
+  private itineraries$: Observable<any> | null = null;
 
   constructor(
-    public override httpClient: HttpClient, 
+    public override httpClient: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
-    public override toast: MessageService 
+    public override toast: MessageService
   ) {
-    super(httpClient, toast); 
+    super(httpClient, toast);
   }
 
   getItineraries(): Observable<any> {
+    if (!this.itineraries$) {
+      this.itineraries$ = this._fetchItineraries().pipe(shareReplay(1));
+    }
+    return this.itineraries$.pipe(
+      catchError(err => {
+        this.itineraries$ = null;
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private _fetchItineraries(): Observable<any> {
     return this.getIdUser().pipe(
       switchMap((userId) => {
         if (userId === null) return of({ itineraries: [] });
@@ -32,20 +45,38 @@ export class ItinerariesService extends BaseHttpService {
     );
   }
 
+  invalidateItineraries(): void {
+    this.itineraries$ = null;
+  }
+
   getItineraryById(itineraryId: number): Observable<any> {
     const headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${itineraryId}/`, { headers });
   }
-  
+
   createItinerary(itinerary: Itinerary): Observable<any> {
     const headers = this.createHeaders();
     return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/itinerary/create/`, itinerary, {
       headers,
-      withCredentials: true, 
-    });
+      withCredentials: true,
+    }).pipe(
+      tap(() => this.invalidateItineraries())
+    );
   }
-  
+
   getIdUser(): Observable<number | null> {
+    if (!this.userId$) {
+      this.userId$ = this._fetchIdUser().pipe(shareReplay(1));
+    }
+    return this.userId$.pipe(
+      catchError(err => {
+        this.userId$ = null;
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private _fetchIdUser(): Observable<number | null> {
     if (!isPlatformBrowser(this.platformId)) return of(null);
 
     const token = localStorage.getItem(globals.keys.accessToken) || '';
@@ -60,8 +91,17 @@ export class ItinerariesService extends BaseHttpService {
 
     const headers = this.createHeaders();
     return this.httpClient.post<{ id: number }>(`${globals.apiBaseUrl}/users/user/get_id/`, { uid }, { headers }).pipe(
-      map((response) => response.id)
+      map((response) => response.id),
+      catchError(err => {
+        this.userId$ = null;
+        return throwError(() => err);
+      })
     );
+  }
+
+  invalidateUser(): void {
+    this.userId$ = null;
+    this.itineraries$ = null;
   }
 
   private createHeaders(): HttpHeaders {
@@ -69,14 +109,14 @@ export class ItinerariesService extends BaseHttpService {
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem(globals.keys.accessToken) || '';
     }
-  
+
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'X-CSRFToken': this.csrfToken,
       'Content-Type': 'application/json',
     });
   }
-  
+
   getCsrfTokenFromServer(): Observable<string> {
     if (!isPlatformBrowser(this.platformId)) return of('');
 

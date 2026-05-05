@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { map, throwError, of } from 'rxjs';
+import { map, tap, throwError, of } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,18 +12,20 @@ import { MessageService } from '../messageService';
 })
 export class DestinationService extends BaseHttpService {
   private csrfToken: string = '';
+  private summaryCache = new Map<number, any>();
 
   map(arg0: (code: any) => any) {
     throw new Error('Method not implemented.');
   }
+
   constructor(
-    public override httpClient: HttpClient, 
+    public override httpClient: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
-    public override toast: MessageService 
+    public override toast: MessageService
   ) {
-    super(httpClient, toast); 
+    super(httpClient, toast);
   }
-    
+
   getDestinations(): Observable<any> {
     const headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/`, { headers });
@@ -35,13 +37,26 @@ export class DestinationService extends BaseHttpService {
   }
 
   getDestinationSummary(destinationId: number): Observable<any> {
+    if (this.summaryCache.has(destinationId)) {
+      return of(this.summaryCache.get(destinationId));
+    }
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}/summary/`, { headers });
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}/summary/`, { headers }).pipe(
+      tap(data => this.summaryCache.set(destinationId, data))
+    );
+  }
+
+  invalidateSummary(destinationId: number): void {
+    this.summaryCache.delete(destinationId);
+  }
+
+  invalidateAllSummaries(): void {
+    this.summaryCache.clear();
   }
 
   getCountriesByDestination(destinationId: number): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}`, { headers })
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}`, { headers });
   }
 
   getCitiesFromGoogle(input: string, countryCode: string): Observable<any> {
@@ -54,7 +69,7 @@ export class DestinationService extends BaseHttpService {
 
   getCountriesByItinerary(itineraryId: number): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${itineraryId}/countries/`, { headers })
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${itineraryId}/countries/`, { headers });
   }
 
   createDestination(payload: any): Observable<any> {
@@ -63,20 +78,22 @@ export class DestinationService extends BaseHttpService {
   }
 
   updateDateDestination(destinationId: any, data: any = {}): Observable<any> {
-  const headers = this.createHeaders();
-  return this.httpClient.patch(
-    `${globals.apiBaseUrl}/itineraries/destination/update/${destinationId}/`,
-    data,
-    { headers, withCredentials: true }
-  );
-}
+    const headers = this.createHeaders();
+    return this.httpClient.patch(
+      `${globals.apiBaseUrl}/itineraries/destination/update/${destinationId}/`,
+      data,
+      { headers, withCredentials: true }
+    ).pipe(
+      tap(() => this.invalidateSummary(destinationId))
+    );
+  }
 
   private createHeaders(): HttpHeaders {
     let token = '';
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem(globals.keys.accessToken) || '';
     }
-  
+
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'X-CSRFToken': this.csrfToken,
@@ -98,7 +115,7 @@ export class DestinationService extends BaseHttpService {
 
     return this.httpClient.get<{ csrftoken: string }>(`${globals.apiBaseUrl}/itineraries/csrf-token/`, {
       headers,
-      withCredentials: true, 
+      withCredentials: true,
     }).pipe(
       map((response) => response.csrftoken)
     );

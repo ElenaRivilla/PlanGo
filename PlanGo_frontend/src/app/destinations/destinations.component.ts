@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DestinationService } from '../core/services/destinations.service';
 import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface';
@@ -60,9 +61,12 @@ export class DestinationsComponent implements OnInit {
     private router: Router,
     private itineraryService: ItinerariesService,
     private toast: BaseToastService,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) { }
 
   async ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     await this.getCountries();
     this.itineraryStartDate = history.state.itineraryStartDate;
     this.itineraryEndDate = history.state.itineraryEndDate;

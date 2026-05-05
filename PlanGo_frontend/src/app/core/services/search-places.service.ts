@@ -34,7 +34,7 @@ export class SearchPlacesService {
 
   searchNearby(payload: { latitude: number, longitude: number, radius?: number }): Observable<any> {
     let headers = this.createHeaders();
-    return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`, payload, { headers, withCredentials: true });
+    return this.httpClient.post(`${globals.apiBaseUrl}/places/search_nearby/`, payload, { headers, withCredentials: true });
   }
 
   saveAccommodationWithImages(payload: any): Observable<any> {

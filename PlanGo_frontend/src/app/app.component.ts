@@ -79,36 +79,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.itinerariesService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
         this.itinerariesService.setCsrfToken(csrfToken);
-      },
-      error: (err) => {
-        console.error('Error al obtener el token CSRF:', err);
-      },
-    });
-
-    this.destinationService.getCsrfTokenFromServer().subscribe({
-      next: (csrfToken) => {
         this.destinationService.setCsrfToken(csrfToken);
-      },
-      error: (err) => {
-        console.error('Error al obtener el token CSRF:', err);
-      },
-    });
-
-    this.searchLocationService.getCsrfTokenFromServer().subscribe({
-      next: (csrfToken) => {
         this.searchLocationService.setCsrfToken(csrfToken);
-      },
-      error: (err) => {
-        console.error('Error al obtener el token CSRF:', err);
-      },
-    });
-
-    this.searchPlacesService.getCsrfTokenFromServer().subscribe({
-      next: (csrfToken) => {
         this.searchPlacesService.setCsrfToken(csrfToken);
       },
       error: (err) => {
-        console.error('Error al obtener el token CSRF (searchPlaces):', err);
+        console.error('Error al obtener el token CSRF:', err);
       },
     });
   }

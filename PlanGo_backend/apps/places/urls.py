@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.views import get_accommodations_from_destination, get_activities_from_destination, get_restaurants_from_destination, get_saved_accommodations, get_saved_activities, get_saved_restaurants, create_activity_with_images, create_restaurant_with_images, create_accommodation_with_images, create_saved_place_with_images, get_all_categories_from_destination, get_saved_places_by_category
-from .views.google_places_view import google_places_search_nearby
+from .views.places_search_view import search_nearby
 
 urlpatterns = [
     # ITINERARY
@@ -30,5 +30,5 @@ urlpatterns = [
     path('get_categories/', get_all_categories_from_destination, name="get_all_categories_from_destination"),
     
     # API PLACES 
-    path('google_places_search_nearby/', google_places_search_nearby, name='google_places_search_nearby'),
+    path('search_nearby/', search_nearby, name='search_nearby'),
 ]

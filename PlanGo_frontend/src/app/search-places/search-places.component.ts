@@ -26,7 +26,6 @@ import { SavedPlacesService } from "../core/services/saved-places.service";
     CommonModule,
     HeaderComponent,
     MapComponent,
-    ParticipantsComponent,
     FormsModule,
     BackButtonComponent,
     ToastModule,

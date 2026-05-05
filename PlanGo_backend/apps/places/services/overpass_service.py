@@ -7,6 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR.parent / '.env')
 OVERPASS_URL = os.getenv("OVERPASS_API_URL")
 
+OVERPASS_MIRRORS = [
+    OVERPASS_URL,
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+]
+
 def map_category_to_osm_tags(category: str) -> dict:
     cat = category.strip().lower()
 
@@ -89,12 +95,27 @@ def search_nearby(lat: float, lng: float, radius: int, category: str) -> list:
         'Accept': '*/*',
         'User-Agent': 'PlanGo/1.0'
     }
-    response = requests.post(OVERPASS_URL, data=query, headers=headers, timeout=35)
-    response.raise_for_status()
 
-    elements = response.json().get('elements', [])
-    places = [parse_element(e) for e in elements]
-    return [p for p in places if p is not None]
+    last_error = None
+    for url in OVERPASS_MIRRORS:
+        if not url:
+            continue
+        try:
+            response = requests.post(url, data=query, headers=headers, timeout=35)
+            response.raise_for_status()
+            elements = response.json().get('elements', [])
+            places = [parse_element(e) for e in elements]
+            return [p for p in places if p is not None]
+        except requests.exceptions.Timeout:
+            last_error = f"Timeout en {url}"
+            continue
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None and e.response.status_code in (429, 504):
+                last_error = f"Error {e.response.status_code} en {url}"
+                continue
+            raise
+
+    raise requests.exceptions.ConnectionError(f"Todos los mirrors fallaron. Último error: {last_error}")
 
 
 def attach_is_save_flag(places: list, saved_place_ids: set) -> list:
