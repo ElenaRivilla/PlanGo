@@ -78,17 +78,6 @@ export class ItinerariesComponent implements OnInit {
     }
   }
 
-  private formatDate(date: any): string {
-    if (!date) return '';
-    if (typeof date === 'string') {
-      // Si ya es string, intenta devolver solo la parte YYYY-MM-DD
-      return date.split('T')[0];
-    }
-    if (date instanceof Date) {
-      return date.toISOString().split('T')[0];
-    }
-    return '';
-  }
 
   onSubmit(): void {
     this.formSubmitted = true;

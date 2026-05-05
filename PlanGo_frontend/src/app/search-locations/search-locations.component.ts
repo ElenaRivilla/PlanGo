@@ -1,6 +1,6 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, PLATFORM_ID, Inject } from '@angular/core';
 import { MapComponent } from '../core/map/map.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ParticipantsComponent } from '../participants/participants.component';
@@ -46,12 +46,12 @@ export class SearchLocationsComponent {
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   selectedPlace: any = null;
   mapLocation: any = { lat: 39.720007, lng: 2.910419 }; // o el centro por defecto
-
   sections = [
     { title: 'Alojamientos', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
     { title: 'Comer y beber', isOpen: false, onEdit: () => this.editCategory('Comer y beber', this.currentDestination) },
     { title: 'Cosas que hacer', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
   ];
+
   constructor(
     private sanitizer: DomSanitizer,
     private destinationService: DestinationService,
@@ -59,6 +59,7 @@ export class SearchLocationsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private toast: BaseToastService,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
 
     const rawIcons = [
@@ -98,8 +99,8 @@ export class SearchLocationsComponent {
     }
   }
 
-
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       this.route.queryParamMap.subscribe(queryParams => {
