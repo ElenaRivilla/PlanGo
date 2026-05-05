@@ -3,7 +3,9 @@
 
     <div class="flex items-center gap-2 w-auto">
         <!-- Botón para decrementar -->
-        <button (click)="decrement()" class="bg-none border-none text-lg cursor-pointer px-2 text-white">−</button>
+         <div *ngIf="!disableControls">
+            <button (click)="decrement()" class="bg-none border-none text-lg cursor-pointer px-2 text-white">−</button>
+        </div>
 
         <!-- Círculo con progreso -->
         <div class="relative w-12 h-12">
@@ -21,7 +23,9 @@
         </div>
 
         <!-- Botón para incrementar -->
-        <button (click)="increment()" class="bg-none border-none text-lg cursor-pointer px-2 text-white">+</button>
+        <div *ngIf="!disableControls">
+            <button (click)="increment()" class="bg-none border-none text-lg cursor-pointer px-2 text-white">+</button>
+        </div>
     </div>
 
 </div>

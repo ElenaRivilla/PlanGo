@@ -140,6 +140,10 @@ svg {
     width: 35%;
 }
 
+.total-days-counter {
+    @apply mr-4;
+}
+
 ::ng-deep ng-dropdown-panel {
     position: absolute;
     top: 100%;

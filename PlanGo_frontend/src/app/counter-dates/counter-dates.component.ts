@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { DestinationService } from '../core/services/destinations.service';
-import { take, delay } from 'rxjs';
-
+import { take } from 'rxjs';
+import { CommonModule } from '@angular/common';
 @Component({
   standalone: true,
   selector: 'app-day-counter',
   templateUrl: './counter-dates.component.html',
-  styleUrls: ['./counter-dates.component.css']
+  styleUrls: ['./counter-dates.component.css'],
+  imports: [CommonModule]
 })
 export class CounterDatesComponent {
   @Input() city: string = 'Ciudad';
@@ -21,6 +22,7 @@ export class CounterDatesComponent {
   @Input() circleColor: string = '#ffffff';
   @Input() bgColor: string = '#4c43ce'; 
   @Input() textColor: string = '#ffffff'; 
+  @Input() disableControls: boolean = false;
   @Output() maxDaysReached = new EventEmitter<void>();
   @Output() confirmedDates = new EventEmitter<{ destinationId: number; startDate: string; endDate: string }>();
   @Output() reloadDestination = new EventEmitter<number>();

@@ -18,6 +18,7 @@
           <div class="header-right">
             <div class="divider-vertical"></div>
             <app-day-counter
+              class="total-days-counter"
               [city]="'Total'"
               [idDestino]="0"
               [circleColor]="getOccupiedDays() === itineraryTotalDays ? '#ef4444' : '#4c43ce'"
@@ -29,7 +30,8 @@
               [startDateStr]="itineraryStartDate"
               [itineraryStartDate]="itineraryStartDate"
               [otherOccupiedDays]="0"
-              [destinationStartDate]="itineraryStartDate">
+              [destinationStartDate]="itineraryStartDate"
+              [disableControls]="true">
             </app-day-counter>
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

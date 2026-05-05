@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DestinationService } from '../core/services/destinations.service';
-import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -28,7 +27,6 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
     CommonModule,
     FormsModule,
     HeaderComponent,
-    ParticipantsComponent,
     MapComponent,
     NgSelectModule,
     CounterDatesComponent,
