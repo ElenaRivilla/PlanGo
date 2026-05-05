@@ -1,7 +1,11 @@
 import requests
+from dotenv import load_dotenv
+from pathlib import Path
+import os
 
-OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
-
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent / '.env')
+OVERPASS_URL = os.getenv("OVERPASS_API_URL")
 
 def map_category_to_osm_tags(category: str) -> dict:
     cat = category.strip().lower()
@@ -32,8 +36,7 @@ def build_overpass_query(lat: float, lng: float, radius: int, tag_groups: dict) 
     for key, values in tag_groups.items():
         for value in values:
             parts.append(f'  node["{key}"="{value}"](around:{radius},{lat},{lng});')
-            parts.append(f'  way["{key}"="{value}"](around:{radius},{lat},{lng});')
-    return '[out:json][timeout:30];\n(\n' + '\n'.join(parts) + '\n);\nout center 50;'
+    return '[out:json][timeout:30];\n(\n' + '\n'.join(parts) + '\n);\nout center 25;'
 
 
 def parse_element(element: dict) -> dict | None:

@@ -7,7 +7,7 @@ from apps.places.services import overpass_service
 def google_places_search_nearby(request):
     lat = request.data.get('latitude', 39.576003)
     lng = request.data.get('longitude', 2.654179)
-    radius = request.data.get('radius', 50000)
+    radius = request.data.get('radius', 10000)
     category = request.data.get('category', 'Alojamientos')
     user_id = request.data.get('user_id')
 
